@@ -10,6 +10,4 @@ const LoginForm = () => {
         </form>
     )	
 }    
-// test
-// ee
 export default LoginForm
