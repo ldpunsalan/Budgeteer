@@ -56,26 +56,43 @@ const handleInputChange = (e: any) => {
 
 return (
     <div className="registerpage">
-        
         {errorMessage2 === '' ? null :
            <span style={{fontWeight: 'bold',}}> {errorMessage2}</span>}
         <br />
 
        <div className="email">
            <label className="register_label">Email</label>
-           <input className="register_input" type="email" id="email" value={email} onChange = {(e) => handleInputChange(e)}></input>
+           <input 
+                className="register_input" 
+                type="email" 
+                id="email" 
+                placeholder="Enter your email address"
+                value={email} 
+                onChange = {(e) => handleInputChange(e)}></input>
        </div>
 
        <div className="password">
            <label className="register_label">Password</label>
-           <input className="register_input" type="password" id="password" value={password} onChange = {(e) => handleInputChange(e)}></input> 
+           <input 
+                className="register_input" 
+                type="password" 
+                id="password"
+                placeholder="Password" 
+                value={password} 
+                onChange = {(e) => handleInputChange(e)}></input> 
            {errorMessage === '' ? null :
            <span style={{fontWeight: 'bold', color: 'blue'}}> {errorMessage}</span>}
        </div>
 
        <div className="confirm-password">
            <label className="register_label">Confirm Password</label>
-           <input className="register_input" type="password" id="confirmpassword" value={confirmpassword} onChange = {(e) => handleInputChange(e)}></input>
+           <input 
+                className="register_input" 
+                type="password" 
+                id="confirmpassword" 
+                placeholder="Confirm Password"
+                value={confirmpassword} 
+                onChange = {(e) => handleInputChange(e)}></input>
        </div>
 
        <button onClick={handleSubmit}> Register </button>
