@@ -22,5 +22,8 @@
   "homepage": "https://github.com/ldpunsalan/Budgeteer#readme",
   "devDependencies": {
     "concurrently": "^7.6.0"
+  },
+  "dependencies": {
+    "validator": "^13.9.0"
   }
 }
