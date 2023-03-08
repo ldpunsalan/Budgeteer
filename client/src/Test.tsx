@@ -13,7 +13,7 @@ const [errorMessage2, setErrorMessage2] = useState('');
 
 
 
-/* Use alerts or not/ can switch to custom error message on handleSubmit (button press) */
+/* Use alerts or not/ can switch to custom error message on handleSubmit (button press)1 */
 
 const handleSubmit = (e: any) => {
     e.preventDefault();
