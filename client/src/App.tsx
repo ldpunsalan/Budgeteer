@@ -1,13 +1,13 @@
-import Test from './Test';
+import SignupForm from './component/SignupForm/SignupForm';
 
 import './App.css';
-import LoginForm from './loginForm';
+import LoginForm from './component/LoginForm/LoginForm';
 
 function App() {
   return (
     <div className="App">
       Budgeteer!
-      <Test />
+      <SignupForm />
       <LoginForm/>
     </div>
   );

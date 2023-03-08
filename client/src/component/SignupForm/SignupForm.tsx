@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import validator from 'validator';
 
-const Test = () => {
+const SignupForm = () => {
 
 
 const [email, setEmail] = useState('');
@@ -84,4 +84,4 @@ return (
 )
 }
 
-export default Test
+export default SignupForm
