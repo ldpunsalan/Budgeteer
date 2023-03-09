@@ -1,0 +1,12 @@
+.app-container {
+    padding: 24px;
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+}
+
+.nav > * {
+    margin-left: 12px;
+}
