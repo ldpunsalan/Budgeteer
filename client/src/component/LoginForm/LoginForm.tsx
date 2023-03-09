@@ -51,9 +51,24 @@ const LoginForm = () => {
         <form name={"loginForm"} onSubmit={handleSubmit}>
             <fieldset>
                 <legend>Login</legend>
-                <input name={"email"} className={"loginFormInputFields"} type={"email"} placeholder={"Email"} pattern={"[A-Za-z0-9]+@[A-Za-z0-9]+.[A-Za-z]+"} required></input>
-                <input name={"password"} className={"loginFormInputFields"} type={"password"} placeholder={"Password"} required></input>
-                <input className={"loginFormSubmitButton"} name={'login'} type={"submit"} value={"Login"}></input>
+                <input 
+                    name="email" 
+                    className="loginFormInputFields" 
+                    type="email" 
+                    placeholder="Email" 
+                    pattern="[A-Za-z0-9]+@[A-Za-z0-9]+.[A-Za-z]+" 
+                    required />
+                <input 
+                    name="password" 
+                    className="loginFormInputFields" 
+                    type="password" 
+                    placeholder="Password" 
+                    required />
+                <input 
+                    className="loginFormSubmitButton" 
+                    name="login" 
+                    type="submit" 
+                    value="Login" />
                 {errorMessage ? <div>{errorMessage}</div> : ''}
             </fieldset>
         </form>
