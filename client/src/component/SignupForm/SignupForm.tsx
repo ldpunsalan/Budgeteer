@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import validator from 'validator';
+import styles from './SignupForm.module.css';
 
 const SignupForm = () => {
     
@@ -57,8 +58,7 @@ const SignupForm = () => {
             <span style={{fontWeight: 'bold',}}> {errorMessage2}</span>}
             <br />
 
-            <div className="email">
-                <label className="register_label">Email</label>
+            <div className={styles['text-box']}>
                 <input 
                     className="register_input" 
                     type="email" 
@@ -68,8 +68,7 @@ const SignupForm = () => {
                     onChange = {(e) => handleInputChange(e)} />
             </div>
 
-            <div className="password">
-                <label className="register_label">Password</label>
+            <div className={styles['text-box']}>
                 <input 
                     className="register_input" 
                     type="password" 
@@ -81,8 +80,7 @@ const SignupForm = () => {
                 <span style={{fontWeight: 'bold', color: 'blue'}}> {errorMessage}</span>}
             </div>
 
-            <div className="confirm-password">
-                <label className="register_label">Confirm Password</label>
+            <div className={styles['text-box']}>
                 <input 
                     className="register_input" 
                     type="password" 
@@ -92,7 +90,7 @@ const SignupForm = () => {
                     onChange = {(e) => handleInputChange(e)} />
             </div>
 
-            <button onClick={handleSubmit}> Register </button>
+            <button onClick={handleSubmit} className={styles['button']} >Register</button>
 
         </div>
     )
