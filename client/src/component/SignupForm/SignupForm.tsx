@@ -1,7 +1,9 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import validator from 'validator';
 
 const SignupForm = () => {
+    const navigate = useNavigate()
     
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -16,15 +18,14 @@ const SignupForm = () => {
         e.preventDefault();
         if (email === undefined || email === '' || password === undefined || password === '' || confirmpassword === undefined || confirmpassword ==='') {
             setErrorMessage2('Fill Up all the Fields')
-        }
-        else if (!validator.isStrongPassword(password,{minLength: 8, minLowercase:1, minUppercase:1, minNumbers:1, minSymbols:1}))
+        } else if (!validator.isStrongPassword(password,{minLength: 8, minLowercase:1, minUppercase:1, minNumbers:1, minSymbols:1})) {
             setErrorMessage2('Weak Password')
-
-        else if (password !== confirmpassword)
+        } else if (password !== confirmpassword) {
             setErrorMessage2('Passwords inputted are not the same')
-
-        else 
+        } else {
             setErrorMessage2('Success')
+            navigate("/login")
+        } 
         console.log(email,password,confirmpassword)
     }
 
@@ -39,11 +40,12 @@ const SignupForm = () => {
         if (name === "password")
             setPassword(value)
 
-        if (name === "password")
+        if (name === "password") {
             if (validator.isStrongPassword(value,{ minLength: 8, minLowercase:1, minUppercase:1, minNumbers:1, minSymbols:1})) 
                 setErrorMessage('Strong')
             else
                 setErrorMessage("Weak")
+        }
 
         if (name === "confirmpassword")
             setConfirmPassword(value);

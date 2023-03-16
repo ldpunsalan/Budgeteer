@@ -1,10 +1,21 @@
 import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 import '@testing-library/jest-dom'
 import LoginForm from './LoginForm'
 
 const EMAIL_PLACEHOLDER = /email/i
 const PASSWORD_PLACEHOLDER = /password/i
+
+// Mock the modules
+jest.mock('react-router-dom', () => {
+    const originalModule = jest.requireActual('react-router-dom')
+
+    return {
+        __esModule: true,
+        ...originalModule,
+        useNavigate: () => { return (e) => {} }
+    }
+})
+
 
 test("loads properly", () => {
     render(<LoginForm />)

@@ -1,6 +1,11 @@
-import React, {useState} from 'react';
+import React, { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import { SessionContext } from '../../contexts/SessionContext';
 
 const LoginForm = () => {
+    const sessionInfo = useContext(SessionContext)
+    const navigate = useNavigate()
 
     const [errorMessage, setErrorMessage] = useState("")
 
@@ -29,8 +34,8 @@ const LoginForm = () => {
 
         // the form elements can be accessed from the event parameter
         // it is of the form event.target.[name of the input field]
-        let email = event.target.email as HTMLFormElement
-        let password = event.target.password as HTMLFormElement
+        const email = event.target.email as HTMLFormElement
+        const password = event.target.password as HTMLFormElement
 
         const userCredentials = database.find((user) => user.email === email.value)
 
@@ -40,6 +45,8 @@ const LoginForm = () => {
             }
             else {
                 setErrorMessage("Success")
+                sessionInfo.login(email.value)
+                navigate("/")
             }
         }
         else {

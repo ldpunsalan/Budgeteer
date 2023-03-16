@@ -13,6 +13,17 @@ const ERROR_FILL_UP = /fill up all the fields/i
 const ERROR_WEAK_PASSWORD = /weak password/i
 const ERROR_PASSWORD_NOT_SAME = /passwords inputted are not the same/i 
 
+// Mock the modules
+jest.mock('react-router-dom', () => {
+    const originalModule = jest.requireActual('react-router-dom')
+
+    return {
+        __esModule: true,
+        ...originalModule,
+        useNavigate: () => { return (e) => {} }
+    }
+})
+
 test('loads and has the required fields', () => {
     render(<SignupForm />)
 
