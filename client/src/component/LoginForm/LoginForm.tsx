@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { SessionContext } from '../../contexts/SessionContext';
+import server from '../../utils/server';
 
 const LoginForm = () => {
     const sessionInfo = useContext(SessionContext)
@@ -9,24 +10,7 @@ const LoginForm = () => {
 
     const [errorMessage, setErrorMessage] = useState("")
 
-    // Mock Data (?)
-    const database = [
-        {
-        email: "admin@budgeteer.com",
-        password: "admin"
-        },
-        {
-        email: "email@website.com",
-        password: "password"
-        }
-    ]
-
-    const errorMessageTexts = {
-        email: "Invalid Email",
-        password: "Invalid Password"
-    }
-
-    const handleSubmit = (event: any) => {
+    const handleSubmit = async (event: any) => {
         event.preventDefault()
 
         // in React, never try to access the document directly
@@ -37,21 +21,21 @@ const LoginForm = () => {
         const email = event.target.email as HTMLFormElement
         const password = event.target.password as HTMLFormElement
 
-        const userCredentials = database.find((user) => user.email === email.value)
+        try {
+            const res = await server.post('login', {
+                email: email.value,
+                password: password.value
+            })
 
-        if (userCredentials) {
-            if (userCredentials.password !== password.value) {
-                setErrorMessage(errorMessageTexts.password)
-            }
-            else {
-                setErrorMessage("Success")
-                sessionInfo.login(email.value)
-                navigate("/")
-            }
+            setErrorMessage("Success")
+            sessionInfo.login(res.data.user)
+            navigate("/")
+            
+        } catch (err: any) {
+            setErrorMessage(err.response.data.msg)
+            console.log(err)
         }
-        else {
-            setErrorMessage(errorMessageTexts.email)
-        }
+
     }
 
     return (
