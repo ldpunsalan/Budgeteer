@@ -1,5 +1,7 @@
 import express, { Router, Request, Response, NextFunction } from 'express';
 
+import '../types/session'
+
 const router: Router = express.Router();
 
 router.post('/', async (req: Request, res: Response, next: NextFunction) => {
@@ -31,11 +33,15 @@ router.post('/', async (req: Request, res: Response, next: NextFunction) => {
         }
 
         // create session
+        req.session.user = email;
+        req.session.save();
+
+        console.log(`Logged in as ${email}`);
 
         return res.json({
             msg: `Successfully logged in`,
             user: email
-        })
+        });
 
     } catch (err) {
         return next(err);

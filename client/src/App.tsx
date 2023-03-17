@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Outlet, Link } from 'react-router-dom'
 
 import { SessionType, SessionContext } from './contexts/SessionContext';
+import server from './utils/server';
 
 import styles from "./App.module.css"
 
@@ -34,6 +35,23 @@ function App() {
     }
   })
 
+  // Try to retrieve the user session from the server
+  // when the client refreshes
+  useEffect(() => {
+    const getUser = async () => {
+      const res = await server.get('session');
+      if (res.data.user) {
+        sessionInfo.login(res.data.user)
+      }
+    }
+    getUser();
+  }, [sessionInfo])
+
+  const logoutSession = async () => {
+    await server.get('logout');
+    sessionInfo.logout()
+  }
+
   return (
     <SessionContext.Provider value={sessionInfo}>
       <div className={styles['app-container']}>
@@ -48,7 +66,7 @@ function App() {
               <Link to="/login">Log-In</Link>
             </> :
             <>
-              <button onClick={() => sessionInfo.logout()}>Logout</button>
+              <button onClick={() => logoutSession()}>Logout</button>
             </>
           }
         </nav>
