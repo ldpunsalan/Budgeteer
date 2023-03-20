@@ -66,6 +66,10 @@ function App() {
               <Link to="/login">Log-In</Link>
             </> :
             <>
+              <Link to="/buckets">Buckets</Link>
+              <Link to="/purchase">Purchase</Link>
+              <Link to="/paycheck">Paycheck</Link>
+              <Link to="/transfer">Transfer</Link>
               <button onClick={() => logoutSession()}>Logout</button>
             </>
           }

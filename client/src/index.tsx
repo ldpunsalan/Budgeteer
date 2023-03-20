@@ -12,6 +12,10 @@ import App from './App';
 import SignupForm from './component/SignupForm/SignupForm';
 import LoginForm from './component/LoginForm/LoginForm';
 import DashboardPage from './pages/DashboardPage/DashboardPage';
+import BucketsPage from './pages/DashboardPage/BucketsPage';
+import PurchasePage from './pages/DashboardPage/PurchasePage';
+import PaycheckPage from './pages/DashboardPage/PaycheckPage';
+import TransferPage from './pages/DashboardPage/TransferPage';
 
 const router = createBrowserRouter([
   {
@@ -29,6 +33,22 @@ const router = createBrowserRouter([
       {
         path: "/login",
         element: <LoginForm />
+      },
+      {
+        path: "/buckets",
+        element: <BucketsPage />
+      },
+      {
+        path: "/purchase",
+        element: <PurchasePage />
+      },
+      {
+        path: "/paycheck",
+        element: <PaycheckPage />
+      },
+      {
+        path: "/transfer",
+        element: <TransferPage />
       },
     ]
   }
