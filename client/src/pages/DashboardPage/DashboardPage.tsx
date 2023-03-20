@@ -7,7 +7,10 @@ const DashboardPage = () => {
 
     if (sessionInfo.loggedIn) {
         return (
-            <div>Welcome {sessionInfo.user}!</div>
+            <div>
+                <h2>DASHBOARD</h2>
+                Welcome {sessionInfo.user}!
+            </div>
         )
     } else {
         return (
