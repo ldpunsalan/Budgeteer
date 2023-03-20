@@ -2,6 +2,11 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import validator from 'validator';
 
+
+
+import {auth} from '../../firebase'
+import {createUserWithEmailAndPassword} from 'firebase/auth'
+
 const passOpt = {
     minLength: 8,
     minLowercase: 1,
@@ -33,6 +38,24 @@ const SignupForm = () => {
             setErrorMessage2('Passwords inputted are not the same')
         } else {
             setErrorMessage2('Success')
+            createUserWithEmailAndPassword(auth,email,password)
+            .then(u => {})
+            .catch(error => {
+                switch (error.code) {
+                    case 'auth/email-already-in-use':
+                    console.log(`Email address already in use.`);
+                    break;
+                    case 'auth/invalid-email':
+                    console.log(`Email address is invalid.`);
+                    break;
+                    case 'auth/weak-password':
+                    console.log('Password is not strong enough. Add additional characters including special characters and numbers.');
+                    break;
+                    default:
+                    console.log(error.message);
+                    break;
+                }
+            });
             navigate("/login")
         } 
     }
