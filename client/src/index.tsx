@@ -12,10 +12,10 @@ import App from './App';
 import SignupForm from './component/SignupForm/SignupForm';
 import LoginForm from './component/LoginForm/LoginForm';
 import DashboardPage from './pages/DashboardPage/DashboardPage';
-import BucketsPage from './pages/DashboardPage/BucketsPage';
-import PurchasePage from './pages/DashboardPage/PurchasePage';
-import PaycheckPage from './pages/DashboardPage/PaycheckPage';
-import TransferPage from './pages/DashboardPage/TransferPage';
+import BucketsPage from './pages/BucketsPage/BucketsPage';
+import PurchasePage from './pages/PurchasePage/PurchasePage';
+import PaycheckPage from './pages/PaycheckPage/PaycheckPage';
+import TransferPage from './pages/TransferPage/TransferPage';
 
 const router = createBrowserRouter([
   {
