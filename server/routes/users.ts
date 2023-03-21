@@ -11,7 +11,7 @@ router.post('/new', async (req: Request, res: Response, next: NextFunction) => {
         let database: any[] | undefined = await db.get('users');
 
         if (database === undefined) {
-            return res.status(500).json({ msg: "Server error: database missing" });
+            return res.status(500).json({ msg: "Server error: database connection error" });
         }
 
         if (database.filter((user: any) => user.email === email).length > 0) {

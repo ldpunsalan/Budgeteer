@@ -12,7 +12,7 @@ router.post('/', async (req: Request, res: Response, next: NextFunction) => {
         let database = await db.get('users');
 
         if (database === undefined) {
-            database = [];
+            return res.status(500).json({ msg: "Server error: database connection error" });
         }
 
         const accounts = database.filter((user: any) => user.email === email);
