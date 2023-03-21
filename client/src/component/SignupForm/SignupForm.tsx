@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import validator from 'validator';
+import { createUserWithEmailAndPassword } from 'firebase/auth'
 
-
-
-import {auth} from '../../firebase'
-import {createUserWithEmailAndPassword} from 'firebase/auth'
+import { auth } from '../../utils/firebase'
+import server from '../../utils/server';
 
 const passOpt = {
     minLength: 8,
@@ -27,7 +26,7 @@ const SignupForm = () => {
 
     /* Use alerts or not/ can switch to custom error message on handleSubmit (button press)1 */
 
-    const handleSubmit = (e: any) => {
+    const handleSubmit = async (e: any) => {
         e.preventDefault()
 
         if (email === undefined || email === '' || password === undefined || password === '' || confirmpassword === undefined || confirmpassword ==='') {
@@ -37,26 +36,43 @@ const SignupForm = () => {
         } else if (password !== confirmpassword) {
             setErrorMessage2('Passwords inputted are not the same')
         } else {
-            setErrorMessage2('Success')
-            createUserWithEmailAndPassword(auth,email,password)
-            .then(u => {})
-            .catch(error => {
-                switch (error.code) {
-                    case 'auth/email-already-in-use':
-                    console.log(`Email address already in use.`);
-                    break;
-                    case 'auth/invalid-email':
-                    console.log(`Email address is invalid.`);
-                    break;
-                    case 'auth/weak-password':
-                    console.log('Password is not strong enough. Add additional characters including special characters and numbers.');
-                    break;
-                    default:
-                    console.log(error.message);
-                    break;
-                }
-            });
-            navigate("/login")
+            try {
+                await server.post('users/new', {
+                    email: email,
+                    password: password
+                })
+                setErrorMessage2('Success')
+                alert('Successfully created new account! Please login.')
+                navigate('/login')
+            } catch (err) {
+                console.error(err);
+                const errMsg = (err as any).response.data.msg;
+                setErrorMessage(errMsg)
+            }
+
+            // for now, lets use a database that will still work even
+            // if there's no internet
+            // createUserWithEmailAndPassword(auth,email,password)
+            //     .then(u => {
+            //         console.log(u)
+            //         navigate("/login")
+            //     })
+            //     .catch(error => {
+            //         switch (error.code) {
+            //             case 'auth/email-already-in-use':
+            //             console.log(`Email address already in use.`);
+            //             break;
+            //             case 'auth/invalid-email':
+            //             console.log(`Email address is invalid.`);
+            //             break;
+            //             case 'auth/weak-password':
+            //             console.log('Password is not strong enough. Add additional characters including special characters and numbers.');
+            //             break;
+            //             default:
+            //             console.log(error.message);
+            //             break;
+            //         }
+            //     });
         } 
     }
 
