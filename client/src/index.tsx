@@ -11,6 +11,7 @@ import reportWebVitals from './reportWebVitals';
 import App from './App';
 import SignupForm from './component/SignupForm/SignupForm';
 import LoginForm from './component/LoginForm/LoginForm';
+import ProtectedPage from './pages/ProtectedPage';
 import DashboardPage from './pages/DashboardPage/DashboardPage';
 import BucketsPage from './pages/BucketsPage/BucketsPage';
 import PurchasePage from './pages/PurchasePage/PurchasePage';
@@ -36,19 +37,19 @@ const router = createBrowserRouter([
       },
       {
         path: "/buckets",
-        element: <BucketsPage />
+        element: <ProtectedPage><BucketsPage /></ProtectedPage>
       },
       {
         path: "/purchase",
-        element: <PurchasePage />
+        element: <ProtectedPage><PurchasePage /></ProtectedPage>
       },
       {
         path: "/paycheck",
-        element: <PaycheckPage />
+        element: <ProtectedPage><PaycheckPage /></ProtectedPage>
       },
       {
         path: "/transfer",
-        element: <TransferPage />
+        element: <ProtectedPage><TransferPage /></ProtectedPage>
       },
     ]
   }
