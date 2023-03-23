@@ -1,10 +1,12 @@
 import { writeFile, readFile } from "fs/promises";
+import path from "path";
 
 interface DBData {
     users: any[]
 }
 
-const DB_PATH = 'utils\\db\\db.json'
+const DB_PATH = path.resolve('utils', 'db', 'db.json'); 
+console.log("DB Path", DB_PATH);
 
 const db = {
     set: async (key: string, value: any) => {
