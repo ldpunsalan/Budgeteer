@@ -1,7 +1,8 @@
+import styles from '../Pages.module.css'
 
 const PurchasePage = () => {
     return (
-        <div>
+        <div className={styles['content']}>
             <h2>PURCHASE</h2>
             <h3>Purchase Name</h3>
             <input 

@@ -1,7 +1,8 @@
+import styles from '../Pages.module.css'
 
 const TransferPage = () => {
     return (
-        <div>
+        <div className={styles['content']}>
             <h2>TRANSFER FUNDS</h2>
             <h3>Source Bucket</h3>
             <select name="sourceBucketName" className="transferPageInputs">

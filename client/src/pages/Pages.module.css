@@ -1,0 +1,7 @@
+.content {
+    display: flex;
+    height: 100vh;
+    align-content:center;
+    justify-content: center;
+    flex-direction:column;
+}

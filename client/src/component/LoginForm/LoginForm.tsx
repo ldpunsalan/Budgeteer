@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 
 import { SessionContext } from '../../contexts/SessionContext';
 import server from '../../utils/server';
-import styles from './LoginForm.module.css'
+import styles from './LoginForm.module.css';
 
 const LoginForm = () => {
     const sessionInfo = useContext(SessionContext)

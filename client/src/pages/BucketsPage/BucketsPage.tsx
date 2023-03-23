@@ -1,10 +1,10 @@
-import styles from './BucketsPage.module.css'
+import styles from '../Pages.module.css'
 
 const BucketsPage = () => {
     return (
-        <div>
+        <div className={styles['content']}>
             <h2>BUCKETS</h2>
-            <h1 className={styles['string']}>&#8369;3125.00</h1>
+            <h1>&#8369;3125.00</h1>
             <h3>Bucket Name</h3>
             <select name="bucketName" className="bucketPageInputs">
                 <option value="Savings">Savings</option>

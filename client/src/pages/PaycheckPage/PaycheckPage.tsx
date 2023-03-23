@@ -1,7 +1,8 @@
+import styles from '../Pages.module.css'
 
 const PaycheckPage = () => {
     return (
-        <div>
+        <div className={styles['content']}>
             <h2>PAYCHECK</h2>
             <h3>Paycheck Amount</h3>
             <input 

@@ -80,3 +80,10 @@ input[type="password"] {
 
     color: rgba(0, 0, 0, 0.75);
 }
+
+.error {
+    color: rgba(255, 0, 0, 0.75);
+    margin: 10px;
+    font-family: 'Creato Display';
+    font-style: italic;
+}

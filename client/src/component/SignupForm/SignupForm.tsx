@@ -111,10 +111,6 @@ const SignupForm = () => {
             <h1>Budgeteer</h1>
         </Link>
         <div className="registerpage">
-            {errorMessage2 === '' ? null :
-            <span style={{fontWeight: 'bold',}}> {errorMessage2}</span>}
-            <br />
-
             <div className="email">
                 <input 
                     className="register_input" 
@@ -134,7 +130,7 @@ const SignupForm = () => {
                     value={password} 
                     onChange = {(e) => handleInputChange(e)} /> 
                 {errorMessage === '' ? null :
-                <span style={{fontWeight: 'bold', color: 'blue'}}> {errorMessage}</span>}
+                <span style={{fontWeight: 'bold', color: '#2684FC'}}> {errorMessage}</span>}
             </div>
 
             <div className="confirm-password">
@@ -146,7 +142,9 @@ const SignupForm = () => {
                     value={confirmpassword} 
                     onChange = {(e) => handleInputChange(e)} />
             </div>
-
+            {errorMessage2 === '' ? null :
+            <span className={styles['error']}> {errorMessage2}</span>}
+            <br />
             <button onClick={handleSubmit} className={styles['button']}> Register </button>
             <p className={styles['text']}>Already have an account? <Link to="/login" className={styles['link']}>Log-In</Link></p>
 
