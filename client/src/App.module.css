@@ -1,5 +1,9 @@
 .app-container {
     padding: 24px;
+    display: flex;
+    justify-content: space-evenly;
+    height:100vh;
+    align-items:center;
 }
 
 .nav {
@@ -9,4 +13,34 @@
 
 .nav > * {
     margin-left: 12px;
+}
+
+.header {
+    font-size: 30px;
+    font-style: italic;
+    color: #2684FC;
+    text-decoration: none;
+}
+
+.string {
+    font-family: 'Creato Display';
+    font-style: normal;
+    font-weight: 400;
+    color: #000;
+    text-decoration: none;
+}
+
+.button {
+    font-family: 'Creato Display';
+    font-style: normal;
+    font-weight: 400;
+
+    text-align: center;
+
+    color: rgba(38, 132, 252, 0.75);
+
+    box-sizing: border-box;
+    border: 1px solid rgba(38, 132, 252, 0.75);
+    border-radius: 20px;
+    background: #FFFF;
 }

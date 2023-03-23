@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { SessionContext } from '../../contexts/SessionContext';
 import server from '../../utils/server';
+import styles from './LoginForm.module.css'
 
 const LoginForm = () => {
     const sessionInfo = useContext(SessionContext)
@@ -40,28 +41,27 @@ const LoginForm = () => {
 
     return (
         <form name={"loginForm"} onSubmit={handleSubmit}>
-            <fieldset>
-                <legend>Login</legend>
-                <input 
-                    name="email" 
-                    className="loginFormInputFields" 
-                    type="email" 
-                    placeholder="Email" 
-                    pattern="[A-Za-z0-9]+@[A-Za-z0-9]+.[A-Za-z]+" 
-                    required />
-                <input 
-                    name="password" 
-                    className="loginFormInputFields" 
-                    type="password" 
-                    placeholder="Password" 
-                    required />
-                <input 
-                    className="loginFormSubmitButton" 
-                    name="login" 
-                    type="submit" 
-                    value="Login" />
-                {errorMessage ? <div>{errorMessage}</div> : ''}
-            </fieldset>
+            <input 
+                name="email" 
+                className={styles['text-box']}
+                type="email" 
+                placeholder="Email" 
+                pattern="[A-Za-z0-9]+@[A-Za-z0-9]+.[A-Za-z]+" 
+                required />
+            <br/>
+            <input 
+                name="password" 
+                className="loginFormInputFields" 
+                type="password" 
+                placeholder="Password" 
+                required />
+            <br/>
+            <input 
+                className={styles['button']}
+                name="login" 
+                type="submit" 
+                value="Login" />
+            {errorMessage ? <div>{errorMessage}</div> : ''}
         </form>
     )	
 }    

@@ -56,7 +56,7 @@ function App() {
     <SessionContext.Provider value={sessionInfo}>
       <div className={styles['app-container']}>
         <nav className={styles['nav']}>
-          <Link to="/">
+          <Link to="/" className={styles['header']}>
             <h1>Budgeteer</h1>
           </Link>
           {
@@ -66,11 +66,11 @@ function App() {
               <Link to="/login">Log-In</Link>
             </> :
             <>
-              <Link to="/buckets">Buckets</Link>
-              <Link to="/purchase">Purchase</Link>
-              <Link to="/paycheck">Paycheck</Link>
-              <Link to="/transfer">Transfer</Link>
-              <button onClick={() => logoutSession()}>Logout</button>
+              <Link to="/buckets" className={styles['string']}>Buckets</Link>
+              <Link to="/purchase" className={styles['string']}>Purchase</Link>
+              <Link to="/paycheck" className={styles['string']}>Paycheck</Link>
+              <Link to="/transfer" className={styles['string']}>Transfer</Link>
+              <button onClick={() => logoutSession()} className={styles['button']}>Logout</button> 
             </>
           }
         </nav>

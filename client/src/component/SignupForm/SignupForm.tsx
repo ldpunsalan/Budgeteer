@@ -5,6 +5,7 @@ import { createUserWithEmailAndPassword } from 'firebase/auth'
 
 import { auth } from '../../utils/firebase'
 import server from '../../utils/server';
+import styles from './SignupForm.module.css'
 
 const passOpt = {
     minLength: 8,
@@ -111,18 +112,16 @@ const SignupForm = () => {
             <br />
 
             <div className="email">
-                <label className="register_label">Email</label>
                 <input 
                     className="register_input" 
                     type="email" 
                     name="email" 
-                    placeholder="Enter your email address"
+                    placeholder="Email"
                     value={email} 
                     onChange = {(e) => handleInputChange(e)} />
             </div>
 
             <div className="password">
-                <label className="register_label">Password</label>
                 <input 
                     className="register_input" 
                     type="password" 
@@ -135,7 +134,6 @@ const SignupForm = () => {
             </div>
 
             <div className="confirm-password">
-                <label className="register_label">Confirm Password</label>
                 <input 
                     className="register_input" 
                     type="password" 
@@ -145,7 +143,7 @@ const SignupForm = () => {
                     onChange = {(e) => handleInputChange(e)} />
             </div>
 
-            <button onClick={handleSubmit}> Register </button>
+            <button onClick={handleSubmit} className={styles['button']}> Register </button>
 
         </div>
     )
