@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 import { SessionContext } from '../../contexts/SessionContext';
 import server from '../../utils/server';
@@ -40,6 +40,10 @@ const LoginForm = () => {
     }
 
     return (
+        <div className={styles['app-container']}>
+        <Link to="/" className={styles['header']}>
+            <h1>Budgeteer</h1>
+        </Link>
         <form name={"loginForm"} onSubmit={handleSubmit}>
             <input 
                 name="email" 
@@ -62,7 +66,9 @@ const LoginForm = () => {
                 type="submit" 
                 value="Login" />
             {errorMessage ? <div>{errorMessage}</div> : ''}
+            <p className={styles['text']}>Don't have an account yet? <Link to="/signup" className={styles['link']}>Sign-Up</Link></p>
         </form>
+        </div>
     )	
 }    
 export default LoginForm

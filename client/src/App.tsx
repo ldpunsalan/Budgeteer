@@ -55,25 +55,6 @@ function App() {
   return (
     <SessionContext.Provider value={sessionInfo}>
       <div className={styles['app-container']}>
-        <nav className={styles['nav']}>
-          <Link to="/" className={styles['header']}>
-            <h1>Budgeteer</h1>
-          </Link>
-          {
-            !sessionInfo.loggedIn ? 
-            <>
-              <Link to="/signup">Sign-Up</Link>
-              <Link to="/login">Log-In</Link>
-            </> :
-            <>
-              <Link to="/buckets" className={styles['string']}>Buckets</Link>
-              <Link to="/purchase" className={styles['string']}>Purchase</Link>
-              <Link to="/paycheck" className={styles['string']}>Paycheck</Link>
-              <Link to="/transfer" className={styles['string']}>Transfer</Link>
-              <button onClick={() => logoutSession()} className={styles['button']}>Logout</button> 
-            </>
-          }
-        </nav>
         <Outlet />
       </div>
     </SessionContext.Provider>

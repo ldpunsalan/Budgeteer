@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import validator from 'validator';
 import { createUserWithEmailAndPassword } from 'firebase/auth'
 
@@ -106,6 +106,10 @@ const SignupForm = () => {
 
 
     return (
+        <div className={styles['app-container']}>
+        <Link to="/" className={styles['header']}>
+            <h1>Budgeteer</h1>
+        </Link>
         <div className="registerpage">
             {errorMessage2 === '' ? null :
             <span style={{fontWeight: 'bold',}}> {errorMessage2}</span>}
@@ -144,7 +148,9 @@ const SignupForm = () => {
             </div>
 
             <button onClick={handleSubmit} className={styles['button']}> Register </button>
+            <p className={styles['text']}>Already have an account? <Link to="/login" className={styles['link']}>Log-In</Link></p>
 
+            </div>
         </div>
     )
 }

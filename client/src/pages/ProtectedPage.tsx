@@ -1,7 +1,8 @@
 import React, { useContext } from 'react'
-import { Navigate, } from 'react-router-dom'
+import { Navigate,Link} from 'react-router-dom'
 
 import { SessionContext } from '../contexts/SessionContext'
+import NavBar from '../component/NavBar/NavBar'
 
 type Props = {
     children: React.ReactNode;
@@ -11,7 +12,10 @@ const ProtectedPage = ({ children }: Props) => {
     const sessionInfo = useContext(SessionContext)
 
     if (sessionInfo.loggedIn) {
-        return <>{children}</>
+        return <div>
+            <NavBar></NavBar>
+            <div>{children}</div>
+        </div>
     } else {
         return <Navigate to="/login" replace={true} />
     }

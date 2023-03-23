@@ -1,3 +1,12 @@
+.app-container {
+    padding: 24px;
+    display: flex;
+    justify-content: space-evenly;
+    gap:50px;
+    height:100vh;
+    align-items:center;
+}
+
 input[type="email"] {
     box-sizing:border-box;
     position:flex;
@@ -43,4 +52,31 @@ input[type="password"] {
     font-size: 25px;
     line-height: 30px;
     color: #FFFFFF;
+}
+
+.header {
+    font-size: 30px;
+    font-style: italic;
+    color: #2684FC;
+    text-decoration: none;
+}
+
+.text {
+    font-family: 'Creato Display';
+    font-style: italic;
+    font-weight: 400;
+    text-align: right;
+    margin: 10px;
+
+    color: rgba(0, 0, 0, 0.75);
+}
+
+.link {
+    font-family: 'Creato Display';
+    font-style: italic;
+    font-weight: 700;
+
+    text-decoration-line: underline;
+
+    color: rgba(0, 0, 0, 0.75);
 }
