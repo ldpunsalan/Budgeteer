@@ -10,3 +10,9 @@ nav > * {
     color:#2684FC;
     font-family: 'Creato Display';
 }
+
+.logout-button {
+    border: 1px solid rgba(38, 132, 252, 0.75);
+    border-radius: 20px;
+    background:white;
+}

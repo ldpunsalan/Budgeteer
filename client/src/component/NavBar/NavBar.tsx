@@ -19,7 +19,7 @@ const NavBar = () => {
         <Link to="/purchase">Purchase</Link>
         <Link to="/paycheck">Paycheck</Link>
         <Link to="/transfer">Transfer</Link>
-        <button onClick={() => logoutSession()}>Logout</button>
+        <button onClick={() => logoutSession()} className={styles['logout-button']}>Logout</button>
     </nav></div>
 }
 
