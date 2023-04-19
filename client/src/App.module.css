@@ -6,6 +6,12 @@
     align-items:flex-start;
 }
 
+@font-face {
+    font-family: "CreatoDisplay";   /*Can be any text*/
+    src: local("CreatoDisplay-Regular"),
+      url("./fonts/CreatoDisplay-Regular.otf") format("truetype");
+  }
+
 /* .app-container {
     padding: 24px;
     display: flex;
