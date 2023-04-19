@@ -2,7 +2,7 @@
     padding: 24px;
     display: flex;
     justify-content: space-evenly;
-    height:100vh;
+    height: calc(100vh - 48px);
     align-items:flex-start;
 }
 
