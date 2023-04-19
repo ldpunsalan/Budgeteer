@@ -1,6 +1,6 @@
 .content {
     display: flex;
-    height: 100vh;
+    height: calc(100vh - 96px);
     align-content:center;
     justify-content: center;
     flex-direction:column;
