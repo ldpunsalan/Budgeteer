@@ -9,7 +9,7 @@ dotenv.config();
 
 const app: Express = express();
 const port = process.env.PORT || 8000;
-const clientPath = process.env.client || 'http://localhost:3000'
+const clientPath = process.env.client || 'http://localhost:5173'
 
 // Set-up request parsing
 app.use(cors({
