@@ -46,7 +46,7 @@ input[type="password"] {
     border: none;
     border-radius: 10px;
 
-    font-family: 'Creato Display';
+    font-family: "Creato Display";
     font-style: normal;
     font-weight: 700;
     font-size: 25px;
@@ -62,7 +62,7 @@ input[type="password"] {
 }
 
 .text {
-    font-family: 'Creato Display';
+    font-family: "Creato Display";
     font-style: italic;
     font-weight: 400;
     text-align: right;

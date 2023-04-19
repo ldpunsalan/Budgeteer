@@ -7,7 +7,7 @@
 }
 
 @font-face {
-    font-family: "CreatoDisplay";   /*Can be any text*/
+    font-family: "Creato Display";   /*Can be any text*/
     src: local("CreatoDisplay-Regular"),
       url("./fonts/CreatoDisplay-Regular.otf") format("truetype");
   }
