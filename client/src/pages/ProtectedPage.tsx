@@ -11,12 +11,16 @@ type Props = {
 const ProtectedPage = ({ children }: Props) => {
     const sessionInfo = useContext(SessionContext)
 
-    if (sessionInfo.loggedIn) {
+    if (sessionInfo.loading) {
+        console.log("loading")
+        return <div>loading...</div>
+    } else if (sessionInfo.loggedIn) {
         return <div>
             <NavBar></NavBar>
             <div>{children}</div>
         </div>
     } else {
+        console.log("cant", sessionInfo)
         return <Navigate to="/login" replace={true} />
     }
 }

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Outlet, Link } from 'react-router-dom'
 
-import { SessionType, SessionContext } from './contexts/SessionContext';
+import { SessionType, SessionContext, SessionVerbType, SessionVerbs } from './contexts/SessionContext';
 import server from './utils/server';
 
 import styles from "./App.module.css";
@@ -22,15 +22,19 @@ import "./fonts/CreatoDisplay-Thin.otf";
 import "./fonts/CreatoDisplay-ThinItalic.otf";
 
 export const defaultSessionInfo : SessionType = {
+  loading: true,
   loggedIn: false,
   user: "",
-  login: (e) => {},
-  logout: () => {},
 } 
 
+export const defaultSessionVerb : SessionVerbType = {
+  login: (e) => {},
+  logout: () => {},
+}
+
 function App() {
-  const [sessionInfo, setSessionInfo] = useState<SessionType>({
-    ...defaultSessionInfo,
+  const [sessionInfo, setSessionInfo] = useState<SessionType>(defaultSessionInfo)
+  const [sessionVerb, setSessionVerb] = useState<SessionVerbType>({
     login: (e) => {
       setSessionInfo(prev => {
         return {
@@ -38,6 +42,7 @@ function App() {
           loggedIn: true,
           user: e,
       }})
+      console.log("logged in", e)
     },
     logout: () => {
       setSessionInfo(prev => {
@@ -56,23 +61,29 @@ function App() {
     const getUser = async () => {
       const res = await server.get('session');
       if (res.data.user) {
-        sessionInfo.login(res.data.user)
+        sessionVerb.login(res.data.user)
+        setSessionInfo(prev => ({
+          ...prev,
+          loading: false
+        }))
       }
     }
     getUser();
-  }, [sessionInfo])
+  }, [])
 
   const logoutSession = async () => {
     await server.get('logout');
-    sessionInfo.logout()
+    sessionVerb.logout()
   }
 
   return (
-    <SessionContext.Provider value={sessionInfo}>
-      <div className={styles['app-container']}>
-        <Outlet />
-      </div>
-    </SessionContext.Provider>
+    <SessionVerbs.Provider value={sessionVerb}>
+      <SessionContext.Provider value={sessionInfo}>
+        <div className={styles['app-container']}>
+          <Outlet />
+        </div>
+      </SessionContext.Provider>
+    </SessionVerbs.Provider>
   );
 }
 

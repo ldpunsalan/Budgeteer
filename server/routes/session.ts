@@ -5,6 +5,7 @@ import '../types/session';
 const router: Router = express.Router();
 
 router.get('/', (req: Request, res: Response) => {
+    console.log("requested", req.session.user)
     if (req.session.user) {
         res.json({
             user: req.session.user

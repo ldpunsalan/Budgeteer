@@ -1,15 +1,23 @@
 import { createContext } from 'react'
 
 export interface SessionType {
+    loading: Boolean,
     loggedIn: Boolean,
-    user: String,
+    user: String
+}
+
+export interface SessionVerbType {
     login: (e: String) => void,
     logout: () => void
 }
 
 export const SessionContext = createContext<SessionType>({
+    loading: true,
     loggedIn: false,
-    user: "",
+    user: ""
+})
+
+export const SessionVerbs = createContext<SessionVerbType>({
     login: (e) => {},
     logout: () => {}
 })

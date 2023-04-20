@@ -1,16 +1,17 @@
 import { useContext } from 'react';
 import { Link } from 'react-router-dom'
 
-import { SessionContext } from '../../contexts/SessionContext';
+import { SessionContext, SessionVerbs } from '../../contexts/SessionContext';
 import server from '../../utils/server';
 import styles from './NavBar.module.css';
 
 const NavBar = () => {
     const sessionInfo = useContext(SessionContext)
+    const sessionVerb = useContext(SessionVerbs)
 
     const logoutSession = async () => {
         await server.get('logout');
-        sessionInfo.logout()
+        sessionVerb.logout()
     }
 
     return <div className={styles['navbar']}><nav>

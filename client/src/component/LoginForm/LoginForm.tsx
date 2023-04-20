@@ -1,13 +1,14 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 
-import { SessionContext } from '../../contexts/SessionContext';
+import { SessionContext, SessionVerbs } from '../../contexts/SessionContext';
 import server from '../../utils/server';
 
 import styles from './LoginForm.module.css';
 
 const LoginForm = () => {
     const sessionInfo = useContext(SessionContext)
+    const sessionVerb = useContext(SessionVerbs)
     const navigate = useNavigate()
 
     const [errorMessage, setErrorMessage] = useState("")
@@ -30,7 +31,7 @@ const LoginForm = () => {
             })
 
             setErrorMessage("Success")
-            sessionInfo.login(res.data.user)
+            sessionVerb.login(res.data.user)
             navigate("/")
             
         } catch (err: any) {
