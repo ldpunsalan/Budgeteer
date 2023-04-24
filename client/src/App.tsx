@@ -62,11 +62,11 @@ function App() {
       const res = await server.get('session');
       if (res.data.user) {
         sessionVerb.login(res.data.user)
-        setSessionInfo(prev => ({
-          ...prev,
-          loading: false
-        }))
       }
+      setSessionInfo(prev => ({
+        ...prev,
+        loading: false
+      }))
     }
     getUser();
   }, [])
