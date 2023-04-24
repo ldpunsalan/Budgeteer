@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, Navigate } from 'react-router-dom';
 
 import { SessionContext, SessionVerbs } from '../../contexts/SessionContext';
 import server from '../../utils/server';
@@ -39,6 +39,10 @@ const LoginForm = () => {
             console.log(err)
         }
 
+    }
+
+    if (sessionInfo.loggedIn) {
+        return <Navigate to="/" replace={true} />
     }
 
     return (

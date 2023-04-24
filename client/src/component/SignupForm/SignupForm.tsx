@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useContext, useState } from 'react';
+import { useNavigate, Link, Navigate } from 'react-router-dom';
 import validator from 'validator';
 import { createUserWithEmailAndPassword } from 'firebase/auth'
 
 import { auth } from '../../utils/firebase'
 import server from '../../utils/server';
 import styles from './SignupForm.module.css'
+import { SessionContext } from '../../contexts/SessionContext';
 
 const passOpt = {
     minLength: 8,
@@ -16,6 +17,7 @@ const passOpt = {
 }
 
 const SignupForm = () => {
+    const sessionInfo = useContext(SessionContext)
     const navigate = useNavigate()
     
     const [email, setEmail] = useState('');
@@ -104,6 +106,9 @@ const SignupForm = () => {
         
     }
 
+    if (sessionInfo.loggedIn) {
+        return <Navigate to="/" replace={true} />
+    }
 
     return (
         <div className={styles['app-container']}>
