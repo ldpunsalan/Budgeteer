@@ -2,11 +2,14 @@ import { writeFile, readFile } from "fs/promises";
 import path from "path";
 
 interface DBData {
-    users: any[]
+    users: any[],
+    buckets: any[],
 }
 
 const DB_PATH = path.resolve('utils', 'db', 'db.json'); 
 console.log("DB Path", DB_PATH);
+
+const KEYS = ['users', 'buckets'];
 
 const db = {
     set: async (key: string, value: any) => {
@@ -16,7 +19,9 @@ const db = {
             console.log("DATA", rawData);
 
             const data: DBData = JSON.parse(rawData);
-            if (key === 'users') {
+            if (KEYS.includes(key)) {
+                // @ts-ignore
+                // ts does not recognize the implications of includes
                 data[key] = value;
                 await writeFile(DB_PATH, JSON.stringify(data));
             } else {
@@ -36,7 +41,9 @@ const db = {
 
             const data: DBData = JSON.parse(rawData);
 
-            if (key === 'users') {
+            if (KEYS.includes(key)) {
+                // @ts-ignore
+                // ts does not recognize the implications of includes
                 return data[key];
             } else {
                 console.error('Invalid key', key);
