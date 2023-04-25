@@ -30,6 +30,12 @@ const BucketsPage = () => {
         })
     }
 
+    const editBucket = () => {
+        setModal({
+            status: 'edit'
+        })
+    }
+
     const handleNewBucket = (e: any) => {
         e.preventDefault()
         const name = e.target.name.value
@@ -49,6 +55,38 @@ const BucketsPage = () => {
             }
     
             setBuckets((prev: any) => [...prev, newBucket])
+        }
+
+        setModal({ status: 'none' })
+    }
+
+    const handleEditBucket = (e: any) => {
+        e.preventDefault()
+        const name = e.target.name.value
+        const weight = e.target.weight.value
+        const value = e.target.value.value
+
+        const exist = buckets.filter((bucket: any) => bucket.name === name && bucket.id !== current.id)
+        
+        if (exist.length > 0) {
+            alert('Bucket already exists')
+        } else {
+            const newBucket = {
+                id: current.id,
+                name,
+                weight,
+                value
+            }
+            const newBuckets = buckets.map((bucket : any) => {
+                if (bucket.id !== current.id) {
+                    return bucket;
+                } else {
+                    return newBucket
+                }
+            })
+            console.log(newBuckets)
+            setBuckets(newBuckets)
+            setCurrent(newBucket)
         }
 
         setModal({ status: 'none' })
@@ -77,6 +115,27 @@ const BucketsPage = () => {
                 </form>
             </div>
         )
+    } else if (modal.status === 'edit') {
+        return (
+            <div className={styles['content']}>
+                <h2>Edit Bucket</h2>
+                <form onSubmit={handleEditBucket}>
+                    <label>
+                        Name:
+                        <input type="text" name="name" defaultValue={current.name} required />
+                    </label>
+                    <label>
+                        Weight:
+                        <input type="number" name="weight" defaultValue={current.weight} required />
+                    </label>
+                    <label>
+                        Value:
+                        <input type="number" name="value" defaultValue={current.value} required />
+                    </label>
+                    <input type="submit" value="Edit Bucket" />
+                </form>
+            </div>
+        )
     } else if (!current) {
         return (
             <div className={styles['content']}>
@@ -85,7 +144,7 @@ const BucketsPage = () => {
                 <button onClick={() => addBucket()}>Add Bucket</button>
             </div>
         )
-    }
+    } 
 
     return (
         <div className={styles['content']}>
@@ -108,7 +167,7 @@ const BucketsPage = () => {
                 value={current.weight}
                 required/>
             <button onClick={() => addBucket()}>Add Bucket</button>
-            <button>Edit Bucket</button>
+            <button onClick={() => editBucket()}>Edit Bucket</button>
             <button>Delete Bucket</button>
         </div>
     )
