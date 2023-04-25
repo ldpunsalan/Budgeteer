@@ -7,6 +7,10 @@ import { auth } from '../../utils/firebase'
 import server from '../../utils/server';
 import styles from './SignupForm.module.css'
 import { SessionContext } from '../../contexts/SessionContext';
+import { set, ref} from "firebase/database"
+import {db} from "../../utils/firebase"
+
+
 
 const passOpt = {
     minLength: 8,
@@ -39,43 +43,33 @@ const SignupForm = () => {
         } else if (password !== confirmpassword) {
             setErrorMessage2('Passwords inputted are not the same')
         } else {
-            try {
-                await server.post('users/new', {
-                    email: email,
-                    password: password
+            createUserWithEmailAndPassword(auth,email,password)
+            .then(u => {
+                const uid = u.user.uid
+                const email = u.user.email
+                set(ref(db,`/${u.user.uid}`), {
+                    uid,
+                    email,
                 })
-                setErrorMessage2('Success')
-                alert('Successfully created new account! Please login.')
-                navigate('/login')
-            } catch (err) {
-                console.error(err);
-                const errMsg = (err as any).response.data.msg;
-                setErrorMessage(errMsg)
-            }
 
-            // for now, lets use a database that will still work even
-            // if there's no internet
-            // createUserWithEmailAndPassword(auth,email,password)
-            //     .then(u => {
-            //         console.log(u)
-            //         navigate("/login")
-            //     })
-            //     .catch(error => {
-            //         switch (error.code) {
-            //             case 'auth/email-already-in-use':
-            //             console.log(`Email address already in use.`);
-            //             break;
-            //             case 'auth/invalid-email':
-            //             console.log(`Email address is invalid.`);
-            //             break;
-            //             case 'auth/weak-password':
-            //             console.log('Password is not strong enough. Add additional characters including special characters and numbers.');
-            //             break;
-            //             default:
-            //             console.log(error.message);
-            //             break;
-            //         }
-            //     });
+                navigate("/login")
+            })
+            .catch(error => {
+                switch (error.code) {
+                    case 'auth/email-already-in-use':
+                    console.log(`Email address already in use.`);
+                    break;
+                    case 'auth/invalid-email':
+                    console.log(`Email address is invalid.`);
+                    break;
+                    case 'auth/weak-password':
+                    console.log('Password is not strong enough. Add additional characters including special characters and numbers.');
+                    break;
+                    default:
+                    console.log(error.message);
+                    break;
+                }
+            });
         } 
     }
 

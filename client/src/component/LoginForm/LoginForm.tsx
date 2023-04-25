@@ -6,6 +6,9 @@ import server from '../../utils/server';
 
 import styles from './LoginForm.module.css';
 
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from '../../utils/firebase'
+
 const LoginForm = () => {
     const sessionInfo = useContext(SessionContext)
     const sessionVerb = useContext(SessionVerbs)
@@ -21,23 +24,18 @@ const LoginForm = () => {
 
         // the form elements can be accessed from the event parameter
         // it is of the form event.target.[name of the input field]
-        const email = event.target.email as HTMLFormElement
-        const password = event.target.password as HTMLFormElement
-
-        try {
-            const res = await server.post('login', {
-                email: email.value,
-                password: password.value
+        const email = event.target.email
+        const password = event.target.password 
+        console.log(email.value)
+        console.log(password.value)
+        const auth = getAuth();
+        signInWithEmailAndPassword(auth, email.value, password.value)
+            .then((userCredential) => {
+                const user = userCredential.user;
+                console.log(user)
+                sessionVerb.login(user.uid)
+                navigate("/")
             })
-
-            setErrorMessage("Success")
-            sessionVerb.login(res.data.user)
-            navigate("/")
-            
-        } catch (err: any) {
-            setErrorMessage(err.response.data.msg)
-            console.log(err)
-        }
 
     }
 

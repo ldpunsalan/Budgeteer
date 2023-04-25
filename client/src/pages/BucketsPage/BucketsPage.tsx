@@ -3,11 +3,19 @@ import { useEffect, useState } from 'react'
 import server from '../../utils/server'
 import styles from '../Pages.module.css'
 
+
+import { db } from '../../utils/firebase'
+import { set, ref, update} from "firebase/database"
+import { SessionContext } from '../../contexts/SessionContext'
+import { useContext } from 'react'
+
+
 const BucketsPage = () => {
     const [loading, setLoading] = useState(true)
     const [modal, setModal] = useState({ status: 'none' })
     const [current, setCurrent] = useState<any>({})
     const [buckets, setBuckets] = useState<any>([])
+    const sessionInfo = useContext(SessionContext)
 
     useEffect(() => {
         const fetchBuckets = async () => {
@@ -41,7 +49,7 @@ const BucketsPage = () => {
         const name = e.target.name.value
         const weight = e.target.weight.value
         const value = e.target.value.value
-
+    
         const exist = buckets.filter((bucket: any) => bucket.name === name)
         
         if (exist.length > 0) {
@@ -52,8 +60,19 @@ const BucketsPage = () => {
                 name,
                 weight,
                 value
-            }
-    
+            }   
+            
+            const A = newBucket.id
+            const B = newBucket.name
+            const C = newBucket.weight
+            const D = newBucket.value
+
+            set(ref(db,`/${sessionInfo.user}/Buckets/${B}`), {
+                id: A,
+                name: B,
+                weight: C,
+                value: D
+            })
             setBuckets((prev: any) => [...prev, newBucket])
         }
 
@@ -77,6 +96,12 @@ const BucketsPage = () => {
                 weight,
                 value
             }
+            
+            const A = newBucket.id
+            const B = newBucket.name
+            const C = newBucket.weight
+            const D = newBucket.value
+
             const newBuckets = buckets.map((bucket : any) => {
                 if (bucket.id !== current.id) {
                     return bucket;
@@ -84,6 +109,10 @@ const BucketsPage = () => {
                     return newBucket
                 }
             })
+
+
+
+
             console.log(newBuckets)
             setBuckets(newBuckets)
             setCurrent(newBucket)
