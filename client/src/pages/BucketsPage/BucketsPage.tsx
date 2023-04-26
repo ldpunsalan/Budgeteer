@@ -36,6 +36,29 @@ const BucketsPage = () => {
         })
     }
 
+    const resetAll = () => {
+        // sets the bucket's value to 0
+        const resetBucket = async (id : string) => {
+            // for now, i'm just setting the local values to 0
+            setBuckets((prev : any) => prev.map((bucket : any) => {
+                if (bucket.id == id) {
+                    return {
+                        ...bucket,
+                        value: 0
+                    }
+                } else {
+                    return bucket
+                }
+            }))
+        }
+
+        buckets.forEach((bucket : any) => {
+            resetBucket(bucket.id)
+        });
+
+        setCurrent((prev : any) => ({ ...prev, value: 0 }))
+    }
+
     const handleNewBucket = (e: any) => {
         e.preventDefault()
         const name = e.target.name.value
@@ -187,6 +210,7 @@ const BucketsPage = () => {
             <button onClick={() => addBucket()}>Add Bucket</button>
             <button onClick={() => editBucket()}>Edit Bucket</button>
             <button onClick={handleDeleteBucket}>Delete Bucket</button>
+            <button onClick={() => resetAll()}>Reset All</button>
         </div>
     )
 }
