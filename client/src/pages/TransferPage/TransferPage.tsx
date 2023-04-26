@@ -68,6 +68,8 @@ const TransferPage = () => {
                     ...recBucket, 
                     value: parseInt(recValue) + parseInt(amount)
                 }
+            } else {
+                return b
             }
         }))
         alert("Transfer successful.")
