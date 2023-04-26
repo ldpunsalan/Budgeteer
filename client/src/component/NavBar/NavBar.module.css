@@ -8,7 +8,21 @@ nav {
 nav > * {
     text-decoration: none;
     color:#2684FC;
+    border-radius: 20px;
+    padding:5px 10px;
     font-family: 'Creato Display';
+}
+
+nav > a:hover, a:active{
+    color:white;
+    border-radius: 40px;
+    background:#2684FC;
+}
+
+nav > button:hover{
+    color:white;
+    border-radius: 20px;
+    background:#2684FC;
 }
 
 .logout-button {
