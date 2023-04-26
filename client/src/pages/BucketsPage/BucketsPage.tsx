@@ -5,7 +5,7 @@ import styles from '../Pages.module.css'
 
 
 import { db } from '../../utils/firebase'
-import { set, ref, update} from "firebase/database"
+import { set, ref, update, onValue} from "firebase/database"
 import { SessionContext } from '../../contexts/SessionContext'
 import { useContext } from 'react'
 
@@ -18,16 +18,22 @@ const BucketsPage = () => {
     const sessionInfo = useContext(SessionContext)
 
     useEffect(() => {
+        const userID = sessionInfo.user as any
         const fetchBuckets = async () => {
-            const res = await server.get('buckets')
-            const data = res.data.data
-            console.log(data)
-            if (data.length > 0) {
-                setCurrent(data[0])
-            }
-            console.log(data)
-            setBuckets(data)
-            setLoading(false)
+
+            onValue(ref(db), (snapshot)=>{
+                const data = snapshot.val()
+                
+                
+                let arr = Object.entries(data[userID].Buckets)
+                let bucketList : any[] = [] // populate this
+                bucketList = arr.map((cur) => cur[1])
+                
+                setBuckets(bucketList)
+                setLoading(false)
+            })
+
+            
         }
         fetchBuckets()
     }, [])
@@ -67,7 +73,7 @@ const BucketsPage = () => {
             const C = newBucket.weight
             const D = newBucket.value
 
-            set(ref(db,`/${sessionInfo.user}/Buckets/${B}`), {
+            set(ref(db,`/${sessionInfo.user}/Buckets/${A}`), {
                 id: A,
                 name: B,
                 weight: C,
