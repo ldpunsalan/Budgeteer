@@ -50,6 +50,29 @@ const BucketsPage = () => {
         })
     }
 
+    const resetAll = () => {
+        // sets the bucket's value to 0
+        const resetBucket = async (id : string) => {
+            // for now, i'm just setting the local values to 0
+            setBuckets((prev : any) => prev.map((bucket : any) => {
+                if (bucket.id == id) {
+                    return {
+                        ...bucket,
+                        value: 0
+                    }
+                } else {
+                    return bucket
+                }
+            }))
+        }
+
+        buckets.forEach((bucket : any) => {
+            resetBucket(bucket.id)
+        });
+
+        setCurrent((prev : any) => ({ ...prev, value: 0 }))
+    }
+
     const handleNewBucket = (e: any) => {
         e.preventDefault()
         const name = e.target.name.value
@@ -80,6 +103,7 @@ const BucketsPage = () => {
                 value: D
             })
             setBuckets((prev: any) => [...prev, newBucket])
+            setCurrent(newBucket)
         }
 
         setModal({ status: 'none' })
@@ -125,6 +149,23 @@ const BucketsPage = () => {
         }
 
         setModal({ status: 'none' })
+    }
+
+    const handleDeleteBucket = () => {
+        const newBuckets = buckets.filter((bucket : any) => bucket.id !== current.id)
+        setBuckets(newBuckets)
+
+        if (newBuckets.length === 0) {
+            setCurrent(null)
+        } else {
+            setCurrent(newBuckets[0])
+        }
+    }
+
+    const handleChangeBucket = (e : React.ChangeEvent<HTMLSelectElement>) => {
+        const bucketID = e.target.value;
+        const newCurrent = buckets.filter((bucket: any) => bucket.id == bucketID)
+        setCurrent(newCurrent[0])
     }
 
     if (loading) {
@@ -186,7 +227,7 @@ const BucketsPage = () => {
             <h2>BUCKETS</h2>
             <h1>&#8369;{current.value}</h1>
             <h3>{current.name}</h3>
-            <select name="bucketName" className="bucketPageInputs">
+            <select name="bucketName" className="bucketPageInputs" onChange={handleChangeBucket} value={current.id}>
             {
                 buckets.map((bucket : any) => {
                     return <option value={bucket.id} id={bucket.id}>{bucket.name}</option>
@@ -200,10 +241,11 @@ const BucketsPage = () => {
                 type="number"
                 min="1"
                 value={current.weight}
-                required/>
+                readOnly />
             <button onClick={() => addBucket()}>Add Bucket</button>
             <button onClick={() => editBucket()}>Edit Bucket</button>
-            <button>Delete Bucket</button>
+            <button onClick={handleDeleteBucket}>Delete Bucket</button>
+            <button onClick={() => resetAll()}>Reset All</button>
         </div>
     )
 }
