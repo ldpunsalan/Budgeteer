@@ -55,6 +55,7 @@ const BucketsPage = () => {
             }
     
             setBuckets((prev: any) => [...prev, newBucket])
+            setCurrent(newBucket)
         }
 
         setModal({ status: 'none' })
@@ -168,7 +169,7 @@ const BucketsPage = () => {
             <h2>BUCKETS</h2>
             <h1>&#8369;{current.value}</h1>
             <h3>{current.name}</h3>
-            <select name="bucketName" className="bucketPageInputs" onChange={handleChangeBucket}>
+            <select name="bucketName" className="bucketPageInputs" onChange={handleChangeBucket} value={current.id}>
             {
                 buckets.map((bucket : any) => {
                     return <option value={bucket.id} id={bucket.id}>{bucket.name}</option>
