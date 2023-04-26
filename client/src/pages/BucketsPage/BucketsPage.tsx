@@ -5,7 +5,7 @@ import styles from '../Pages.module.css'
 
 
 import { db } from '../../utils/firebase'
-import { set, ref, update, onValue} from "firebase/database"
+import { set, ref, update, onValue, get} from "firebase/database"
 import { SessionContext } from '../../contexts/SessionContext'
 import { useContext } from 'react'
 
@@ -21,7 +21,7 @@ const BucketsPage = () => {
         const userID = sessionInfo.user as any
         const fetchBuckets = async () => {
 
-            onValue(ref(db), (snapshot)=>{
+            get(ref(db)).then((snapshot)=>{
                 const data = snapshot.val()
                 
                 
