@@ -165,7 +165,7 @@ const BucketsPage = () => {
                 type="number"
                 min="1"
                 value={current.weight}
-                required/>
+                readOnly />
             <button onClick={() => addBucket()}>Add Bucket</button>
             <button onClick={() => editBucket()}>Edit Bucket</button>
             <button>Delete Bucket</button>
