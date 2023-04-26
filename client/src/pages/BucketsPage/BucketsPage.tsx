@@ -92,6 +92,23 @@ const BucketsPage = () => {
         setModal({ status: 'none' })
     }
 
+    const handleDeleteBucket = () => {
+        const newBuckets = buckets.filter((bucket : any) => bucket.id !== current.id)
+        setBuckets(newBuckets)
+
+        if (newBuckets.length === 0) {
+            setCurrent(null)
+        } else {
+            setCurrent(newBuckets[0])
+        }
+    }
+
+    const handleChangeBucket = (e : React.ChangeEvent<HTMLSelectElement>) => {
+        const bucketID = e.target.value;
+        const newCurrent = buckets.filter((bucket: any) => bucket.id == bucketID)
+        setCurrent(newCurrent[0])
+    }
+
     if (loading) {
         return <p>loading...</p>
     } else if (modal.status === 'add') {
@@ -151,7 +168,7 @@ const BucketsPage = () => {
             <h2>BUCKETS</h2>
             <h1>&#8369;{current.value}</h1>
             <h3>{current.name}</h3>
-            <select name="bucketName" className="bucketPageInputs">
+            <select name="bucketName" className="bucketPageInputs" onChange={handleChangeBucket}>
             {
                 buckets.map((bucket : any) => {
                     return <option value={bucket.id} id={bucket.id}>{bucket.name}</option>
@@ -168,7 +185,7 @@ const BucketsPage = () => {
                 readOnly />
             <button onClick={() => addBucket()}>Add Bucket</button>
             <button onClick={() => editBucket()}>Edit Bucket</button>
-            <button>Delete Bucket</button>
+            <button onClick={handleDeleteBucket}>Delete Bucket</button>
         </div>
     )
 }
