@@ -36,15 +36,19 @@ const BucketsPage = () => {
      */
     useEffect(() => {
         const fetchBuckets = async () => {
-            const res = await server.get('buckets')
-            const data = res.data.data
-            console.log(data)
-            if (data.length > 0) {
-                setCurrent(data[0])
+            try {
+                const res = await server.get('buckets')
+                const data = res.data.data
+                console.log(data)
+                if (data.length > 0) {
+                    setCurrent(data[0])
+                }
+                console.log(data)
+                setBuckets(data)
+                setLoading(false)
+            } catch (err : any) {
+                alert(err.response.data.msg)
             }
-            console.log(data)
-            setBuckets(data)
-            setLoading(false)
         }
         fetchBuckets()
     }, [])
@@ -139,9 +143,13 @@ const BucketsPage = () => {
             console.log(newBuckets)
             setBuckets(newBuckets)
             setCurrent(newBucket)
-            server.post('/buckets/edit', {
-                ...newBucket
-            })
+            try {
+                server.post('/buckets/edit', {
+                    ...newBucket
+                })
+            } catch (err) {
+                console.log(err)
+            }
         }
 
         setModal({ status: 'none' })

@@ -13,10 +13,14 @@ const TransferPage = () => {
 
     useEffect(() => {
         const fetchBuckets = async () => {
-            const res = await server.get('buckets')
-            const data = res.data.data
-            setBuckets(data)
-            setLoading(false)
+            try {
+                const res = await server.get('buckets')
+                const data = res.data.data
+                setBuckets(data)
+                setLoading(false)
+            } catch (err : any) {
+                alert(err.response.data.msg)
+            }
         }
         fetchBuckets()
     }, [])
@@ -41,6 +45,16 @@ const TransferPage = () => {
 
     const handleTransferFunds = (e: any) => {
         e.preventDefault()
+
+        console.log("src:", source)
+        console.log("rec", recipient)
+
+        if (source === undefined) {
+            return alert('Please choose a source bucket')
+        } else if (recipient === undefined) {
+            return alert('Please choose a recipient bucket')
+        }
+
         const srcBucket = buckets.filter((bucket : any) => bucket.id == source)[0]
         const recBucket = buckets.filter((bucket : any) => bucket.id == recipient)[0]
         const srcValue = srcBucket.value
@@ -60,21 +74,27 @@ const TransferPage = () => {
         }
 
         if (confirm('Do you want to proceed?')) {
-            setBuckets((prev:any) => prev.map((b:any) => {
-                if (b.id == srcBucket.id) {
-                    return {
-                        ...srcBucket,
-                        value: parseInt(srcValue) - parseInt(amount)
-                    }
-                } else if (b.id == recBucket.id) {
-                    return {
-                        ...recBucket, 
-                        value: parseInt(recValue) + parseInt(amount)
-                    }
+            const newSrc = {
+                ...srcBucket,
+                value: parseInt(srcValue) - parseInt(amount)
+            }
+            const newRec = {
+                ...recBucket, 
+                value: parseInt(recValue) + parseInt(amount)
+            }
+            setBuckets((prev:any) => prev.map((bucket : any) => {
+                if (bucket.id == srcBucket.id) {
+                    return newSrc
+                } else if (bucket.id == recBucket.id) {
+                    return newRec
                 } else {
-                    return b
+                    return bucket
                 }
             }))
+            server.post('/buckets/transfer', {
+                src: newSrc,
+                rec: newRec
+            })
           } else {
             return
           }
@@ -92,8 +112,8 @@ const TransferPage = () => {
                 <div className={styles['content']}>
                     <h2>TRANSFER FUNDS</h2>
                     <h3>Source Bucket</h3> 
-                    <select name="sourceBucketName" className="transferPageInputs" onChange={handleChangeSource}>
-                    <option value="" disabled selected>Select a source bucket</option>
+                    <select name="sourceBucketName" className="transferPageInputs" required onChange={handleChangeSource}>
+                        <option value="" disabled selected>Select a source bucket</option>
                     {
                         buckets.map((bucket : any) => {
                             return <option value={bucket.id} id={bucket.id}>{bucket.name}</option>
@@ -101,7 +121,7 @@ const TransferPage = () => {
                     }     
                     </select>
                     <h3>Recipient Bucket</h3>
-                    <select name="recipientBucketName" className="transferPageInputs" onChange={handleChangeRecipient}>
+                    <select name="recipientBucketName" className="transferPageInputs" required onChange={handleChangeRecipient}>
                     <option value="" disabled selected>Select a recipient bucket</option>
                     {
                         buckets.map((bucket : any) => {
