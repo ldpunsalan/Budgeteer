@@ -84,6 +84,8 @@ const BucketsPage = () => {
         buckets.forEach((bucket : any) => {
             resetBucket(bucket.id)
         });
+        console.log('running')
+        server.post('/buckets/reset', {})
 
         setCurrent((prev : any) => ({ ...prev, value: 0 }))
     }

@@ -150,4 +150,40 @@ router.post('/transfer', async (req: Request, res: Response, next: NextFunction)
     }
 })
 
+router.post('/reset', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const database: any[] | undefined = await db.get('buckets');
+        const user = req.session.user
+        console.log('resetting', user)
+
+        if (!user) {
+            return res.status(401).json({ msg: "Client error: Please login" });
+        }
+
+        if (database === undefined) {
+            return res.status(500).json({ msg: "Server error: database connection error" });
+        }
+
+
+        const newDatabase = database.map((bucket : any) => {
+            if (bucket.user === user) {
+                return {
+                    ...bucket,
+                    value: 0
+                }
+            } else {
+                return bucket
+            }
+        })
+
+        await db.set('buckets', newDatabase);
+
+        return res.json({
+            msg: `Successfully reset funds for ${user}`
+        })
+    } catch (err) {
+        next(err)
+    }
+})
+
 export default router;
