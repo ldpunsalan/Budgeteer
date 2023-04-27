@@ -13,19 +13,24 @@ nav > * {
     font-family: 'Creato Display';
 }
 
-nav > a:hover, a:active{
+nav > * {
+    transition: 0.5s;
+}
+
+nav > *:hover {
     color:white;
     border-radius: 40px;
     background:#2684FC;
 }
 
-nav > button:hover{
+.active {
     color:white;
-    border-radius: 20px;
+    border-radius: 40px;
     background:#2684FC;
 }
 
 .logout-button {
+    font-size:15px;
     border: 1px solid rgba(38, 132, 252, 0.75);
     border-radius: 20px;
     background:white;

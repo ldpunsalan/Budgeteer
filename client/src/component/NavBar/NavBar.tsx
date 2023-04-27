@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { Link } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 
 import { SessionContext, SessionVerbs } from '../../contexts/SessionContext';
 import server from '../../utils/server';
@@ -15,11 +15,11 @@ const NavBar = () => {
     }
 
     return <div className={styles['navbar']}><nav>
-        <Link to="/">Budgeteer</Link>
-        <Link to="/buckets">Buckets</Link>
-        <Link to="/purchase">Purchase</Link>
-        <Link to="/paycheck">Paycheck</Link>
-        <Link to="/transfer">Transfer</Link>
+        <NavLink to="/" className={({ isActive, isPending }) => isPending ? "pending" : isActive ? styles["active"] : ""}>Budgeteer</NavLink>
+        <NavLink to="/buckets" className={({ isActive, isPending }) => isPending ? "pending" : isActive ? styles["active"] : ""}>Buckets</NavLink>
+        <NavLink to="/purchase" className={({ isActive, isPending }) => isPending ? "pending" : isActive ? styles["active"] : ""}>Purchase</NavLink>
+        <NavLink to="/paycheck" className={({ isActive, isPending }) => isPending ? "pending" : isActive ? styles["active"] : ""}>Paycheck</NavLink>
+        <NavLink to="/transfer" className={({ isActive, isPending }) => isPending ? "pending" : isActive ? styles["active"] : ""}>Transfer</NavLink>
         <button onClick={() => logoutSession()} className={styles['logout-button']}>Logout</button>
     </nav></div>
 }

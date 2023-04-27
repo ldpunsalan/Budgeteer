@@ -1,9 +1,26 @@
-.content {
+.container {
     display: flex;
     height: calc(100vh - 96px);
     align-content:center;
     justify-content: center;
     flex-direction:column;
+}
+
+.content {
+    display: flex;
+    align-content:center;
+    justify-content: center;
+    flex-direction:column;
+    margin: 50px;
+}
+
+.buttons {
+    display: flex;
+    align-content: flex-start;
+    flex-direction: row;
+    align-content:center;
+    justify-content: center;
+    gap: 50px;
 }
 
 * {
@@ -35,6 +52,10 @@ button {
     border: 1px solid rgba(38, 132, 252, 0.75);
     border-radius: 20px;
     background:white;
+    font-size:15px;
+    color:#2684FC;
+    padding:5px 10px;
+    font-family: 'Creato Display';
 }
 
 button:hover{
