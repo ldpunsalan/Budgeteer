@@ -7,8 +7,9 @@
     { "email": "old2@old.com", "password": "Abcabc123$$" }
   ], 
   "buckets": [
-    { "id": 1, "user": "admin", "name": "test1", "value": 100, "weight": 2 },
-    { "id": 2, "user": "admin", "name": "test2", "value": 50, "weight": 2 },
-    { "id": 3, "user": "admin", "name": "test3", "value": 10, "weight": 2 }
+    { "id": 1, "user": "admin@budgeteer.com", "name": "test1", "value": 100, "weight": 2 },
+    { "id": 2, "user": "admin@budgeteer.com", "name": "test2", "value": 50, "weight": 2 },
+    { "id": 3, "user": "admin@budgeteer.com", "name": "test3", "value": 10, "weight": 2 },
+    { "id": 4, "user": "email@website.com", "name": "test1", "value": 10000, "weight": 3}
   ]
 }
