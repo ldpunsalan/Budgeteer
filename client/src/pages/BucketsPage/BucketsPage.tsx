@@ -4,11 +4,36 @@ import server from '../../utils/server'
 import styles from '../Pages.module.css'
 
 const BucketsPage = () => {
+    /**
+     * Loading State
+     *  Type: Boolean
+     * This is true while the client side is obtaining the bucket list
+     */
     const [loading, setLoading] = useState(true)
+    /**
+     * Modal State
+     *  Possible Values: 'none' | 'add' | 'edit'
+     * States which interface to show. None refers to the general uneditable view
+     */
     const [modal, setModal] = useState({ status: 'none' })
+    /**
+     * Current Bucket
+     *  Type: Bucket
+     * Contains a COPY of the currently viewed bucket. Serves as a reference for 
+     * the details shown.
+     */
     const [current, setCurrent] = useState<any>({})
+    /**
+     * Bucket List
+     *  Type: List<Bucket>
+     * Contains an UPDATED copy of the user's buckets
+     */
     const [buckets, setBuckets] = useState<any>([])
 
+    /**
+     * Initially, the state is set to the list of buckets for
+     * the user
+     */
     useEffect(() => {
         const fetchBuckets = async () => {
             const res = await server.get('buckets')
@@ -71,7 +96,7 @@ const BucketsPage = () => {
             alert('Bucket already exists')
         } else {
             const newBucket = {
-                id: buckets.length + 1,
+                id: Math.floor(Math.random() * 1000),
                 name,
                 weight,
                 value
@@ -79,6 +104,9 @@ const BucketsPage = () => {
     
             setBuckets((prev: any) => [...prev, newBucket])
             setCurrent(newBucket)
+            server.post('/buckets/new', {
+                ...newBucket
+            })
         }
 
         setModal({ status: 'none' })
@@ -111,6 +139,9 @@ const BucketsPage = () => {
             console.log(newBuckets)
             setBuckets(newBuckets)
             setCurrent(newBucket)
+            server.post('/buckets/edit', {
+                ...newBucket
+            })
         }
 
         setModal({ status: 'none' })
