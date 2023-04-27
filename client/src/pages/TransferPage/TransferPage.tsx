@@ -45,7 +45,6 @@ const TransferPage = () => {
         const recBucket = buckets.filter((bucket : any) => bucket.id == recipient)[0]
         const srcValue = srcBucket.value
         const recValue = recBucket.value
-
         // Spot errors
         if (srcBucket.id === recBucket.id) {
             alert('ERROR: Source and recipient buckets cannot be the same.')
@@ -55,26 +54,35 @@ const TransferPage = () => {
             alert("ERROR: Amount cannot be greater than source bucket's value.")
             return
         }
+        else if (isNaN(amount)) {
+            alert("ERROR: Please enter a valid amount.")
+            return
+        }
 
-        // No errors detected; Set value of Source Bucket to Recipient Bucket Value
-        setBuckets((prev:any) => prev.map((b:any) => {
-            if (b.id == srcBucket.id) {
-                return {
-                    ...srcBucket,
-                    value: parseInt(srcValue) - parseInt(amount)
+        if (confirm('Do you want to proceed?')) {
+            setBuckets((prev:any) => prev.map((b:any) => {
+                if (b.id == srcBucket.id) {
+                    return {
+                        ...srcBucket,
+                        value: parseInt(srcValue) - parseInt(amount)
+                    }
+                } else if (b.id == recBucket.id) {
+                    return {
+                        ...recBucket, 
+                        value: parseInt(recValue) + parseInt(amount)
+                    }
+                } else {
+                    return b
                 }
-            } else if (b.id == recBucket.id) {
-                return {
-                    ...recBucket, 
-                    value: parseInt(recValue) + parseInt(amount)
-                }
-            } else {
-                return b
-            }
-        }))
-        alert("Transfer successful.")
-        
+            }))
+          } else {
+            return
+          }
     }
+
+    useEffect(() => {
+        console.log(buckets)
+    }, [buckets])
     if (loading) {
         return <p>loading...</p>
     }
@@ -83,7 +91,6 @@ const TransferPage = () => {
             <div className={styles['content']}>
                 <h2>TRANSFER FUNDS</h2>
                 <h3>Source Bucket</h3> 
-                <p>{source} | {recipient}</p>
                 <select name="sourceBucketName" className="transferPageInputs" onChange={handleChangeSource}>
                 <option value="" disabled selected>Select a source bucket</option>
                 {
