@@ -35,7 +35,10 @@
   "scripts": {
     "client": "npm run dev --prefix client",
     "server": "npm run dev --prefix server",
+    "client-start": "npm run dev --prefix client",
+    "server-start": "npm run start --prefix server",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "start": "concurrently \"npm run server-start\" \"npm run client-start\"",
     "postinstall": "(cd client && npm install) && (cd server && npm install)"
   },
   "keywords": [],
