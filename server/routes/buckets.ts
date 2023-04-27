@@ -104,7 +104,6 @@ router.post('/edit', async (req: Request, res: Response, next: NextFunction) => 
             }
         })
 
-        console.log(newDatabase)
         await db.set('buckets', newDatabase)
 
         return res.json({
@@ -112,6 +111,42 @@ router.post('/edit', async (req: Request, res: Response, next: NextFunction) => 
         })
     } catch (err) {
         next(err)
+    }
+})
+
+router.post('/transfer', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const database: any[] | undefined = await db.get('buckets');
+        const user = req.session.user
+
+        if (!user) {
+            return res.status(401).json({ msg: "Client error: Please login" });
+        }
+
+        if (database === undefined) {
+            return res.status(500).json({ msg: "Server error: database connection error" });
+        }
+
+        const srcBucket = req.body.src;
+        const recBucket = req.body.rec;
+
+        const newDatabase = database.map((bucket : any) => {
+            if (bucket.id === srcBucket.id) {
+                return srcBucket;
+            } else if (bucket.id === recBucket.id) {
+                return recBucket;
+            } else {
+                return bucket;
+            }
+        })
+
+        await db.set('buckets', newDatabase)
+
+        return res.json({
+            msg: "Successfully transferred funds"
+        })
+    } catch (err) {
+        next(err)   
     }
 })
 
