@@ -186,4 +186,31 @@ router.post('/reset', async (req: Request, res: Response, next: NextFunction) =>
     }
 })
 
+router.post('/delete', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const database: any[] | undefined = await db.get('buckets');
+        const user = req.session.user
+
+        if (!user) {
+            return res.status(401).json({ msg: "Client error: Please login" });
+        }
+
+        if (database === undefined) {
+            return res.status(500).json({ msg: "Server error: database connection error" });
+        }
+
+        const id = req.body.id
+
+        const newDatabase = database.filter((bucket : any) => bucket.id !== id);
+
+        await db.set('buckets', newDatabase);
+
+        return res.json({
+            msg: "Successfully deleted bucket"
+        })
+    } catch (err) {
+        next(err)
+    }
+})
+
 export default router;

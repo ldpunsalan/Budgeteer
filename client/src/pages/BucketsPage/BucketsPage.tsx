@@ -159,6 +159,7 @@ const BucketsPage = () => {
 
     const handleDeleteBucket = () => {
         const newBuckets = buckets.filter((bucket : any) => bucket.id !== current.id)
+        server.post('/buckets/delete', { id: current.id })
         setBuckets(newBuckets)
 
         if (newBuckets.length === 0) {
