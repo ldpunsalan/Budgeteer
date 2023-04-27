@@ -13,8 +13,8 @@ nav > * {
     font-family: 'Creato Display';
 }
 
-nav > a, nav > button {
-    transition: background 0.5s;
+nav > * {
+    transition: 0.5s;
 }
 
 nav > *:hover {

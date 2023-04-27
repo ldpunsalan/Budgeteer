@@ -188,29 +188,25 @@ const BucketsPage = () => {
     } 
 
     return (
-        <div className={styles['content']}>
-            <h2>BUCKETS</h2>
-            <h1>&#8369;{current.value}</h1>
-            <h3>{current.name}</h3>
-            <select name="bucketName" className="bucketPageInputs" onChange={handleChangeBucket} value={current.id}>
-            {
-                buckets.map((bucket : any) => {
-                    return <option value={bucket.id} id={bucket.id}>{bucket.name}</option>
-                })
-            }
-            </select>
-            <h3>Weight</h3>
-            <input 
-                name="bucketWeight"
-                className="bucketPageInputs"
-                type="number"
-                min="1"
-                value={current.weight}
-                readOnly />
-            <button onClick={() => addBucket()}>Add Bucket</button>
-            <button onClick={() => editBucket()}>Edit Bucket</button>
-            <button onClick={handleDeleteBucket}>Delete Bucket</button>
-            <button onClick={() => resetAll()}>Reset All</button>
+        <div   className={styles['container']}>
+            <div className ={styles['content']}>
+                <h2>BUCKETS</h2>
+                <h1>&#8369;{current.value}</h1>
+                <h3>Name= {current.name}<br />Weight= {current.weight}</h3>
+                <select name="bucketName" className="bucketPageInputs" onChange={handleChangeBucket} value={current.id}>
+                {
+                    buckets.map((bucket : any) => {
+                        return <option value={bucket.id} id={bucket.id}>{bucket.name}</option>
+                    })
+                }
+                </select>
+            </div>
+            <div className={styles['buttons']}>
+                <button onClick={() => addBucket()}>Add Bucket</button>
+                <button onClick={() => editBucket()}>Edit Bucket</button>
+                <button onClick={handleDeleteBucket}>Delete Bucket</button>
+                <button onClick={() => resetAll()}>Reset All</button>
+            </div>
         </div>
     )
 }

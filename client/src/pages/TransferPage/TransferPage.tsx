@@ -88,37 +88,41 @@ const TransferPage = () => {
     }
     else {
         return (
-            <div className={styles['content']}>
-                <h2>TRANSFER FUNDS</h2>
-                <h3>Source Bucket</h3> 
-                <select name="sourceBucketName" className="transferPageInputs" onChange={handleChangeSource}>
-                <option value="" disabled selected>Select a source bucket</option>
-                {
-                    buckets.map((bucket : any) => {
-                        return <option value={bucket.id} id={bucket.id}>{bucket.name}</option>
-                    })
-                }     
-                </select>
-                <h3>Recipient Bucket</h3>
-                <select name="recipientBucketName" className="transferPageInputs" onChange={handleChangeRecipient}>
-                <option value="" disabled selected>Select a recipient bucket</option>
-                {
-                    buckets.map((bucket : any) => {
-                        return <option value={bucket.id} id={bucket.id}>{bucket.name}</option>
-                    })
-                }
-                </select>
-                <h3>Amount</h3>
-                <input 
-                    onChange={handleChangeAmount}
-                    name="transferAmount"
-                    className="transferPageInputs"
-                    type="number"
-                    min="1"
-                    placeholder='How much will you transfer?'
-                    required/>
-                <button onClick={handleTransferFunds}>Transfer Funds</button>
-                <button>Cancel</button>
+            <div className={styles['container']}>
+                <div className={styles['content']}>
+                    <h2>TRANSFER FUNDS</h2>
+                    <h3>Source Bucket</h3> 
+                    <select name="sourceBucketName" className="transferPageInputs" onChange={handleChangeSource}>
+                    <option value="" disabled selected>Select a source bucket</option>
+                    {
+                        buckets.map((bucket : any) => {
+                            return <option value={bucket.id} id={bucket.id}>{bucket.name}</option>
+                        })
+                    }     
+                    </select>
+                    <h3>Recipient Bucket</h3>
+                    <select name="recipientBucketName" className="transferPageInputs" onChange={handleChangeRecipient}>
+                    <option value="" disabled selected>Select a recipient bucket</option>
+                    {
+                        buckets.map((bucket : any) => {
+                            return <option value={bucket.id} id={bucket.id}>{bucket.name}</option>
+                        })
+                    }
+                    </select>
+                    <h3>Amount</h3>
+                    <input 
+                        onChange={handleChangeAmount}
+                        name="transferAmount"
+                        className="transferPageInputs"
+                        type="number"
+                        min="1"
+                        placeholder='How much will you transfer?'
+                        required/>
+                </div>
+                <div className={styles['buttons']}>
+                    <button onClick={handleTransferFunds}>Transfer Funds</button>
+                    <button>Cancel</button>
+                </div>
             </div>
         )
     }
