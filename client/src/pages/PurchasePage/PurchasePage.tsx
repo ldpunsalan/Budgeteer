@@ -1,6 +1,30 @@
+import { useEffect, useState } from 'react'
+
+import server from '../../utils/server'
 import styles from '../Pages.module.css'
 
 const PurchasePage = () => {
+    const [loading, setLoading] = useState(true)
+    const [buckets, setBuckets] = useState([])
+
+    useEffect(() => {
+        const fetchBuckets = async () => {
+            try {
+                const res = await server.get('buckets')
+                const data = res.data.data
+                setBuckets(data)
+                setLoading(false)
+            } catch (err : any) {
+                alert(err.response.data.msg)
+            }
+        }
+        fetchBuckets()
+    }, [])
+
+    if (loading) {
+        return <div>Loading...</div>
+    }
+
     return (
         <div className={styles['content']}>
             <h2>PURCHASE</h2>
@@ -22,12 +46,11 @@ const PurchasePage = () => {
             <h3>Bucket</h3>
             <select name="bucketName" className="purchasePageInputs">
                 <option value="" disabled selected>Choose the relevant bucket</option>
-                <option value="Savings">Savings</option>
-                <option value="Splurge">Splurge</option>
-                <option value="Medicine">Medicine</option>
-                <option value="Art">Art</option>
-                <option value="Work">Work</option>
-                <option value="Education">Education</option>
+                {
+                    buckets.map((bucket : any) => {
+                        return <option value={bucket.id} id={bucket.id}>{bucket.name}</option>
+                    })
+                }
             </select>
             <h3>Date</h3>
             <input
