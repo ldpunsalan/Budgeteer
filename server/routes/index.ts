@@ -5,6 +5,7 @@ import logout from './logout'
 import session from './session'
 import users from './users'
 import buckets from './buckets'
+import purchases from './purchases'
 
 export default (app: Express) => {
     app.use('/login', login);
@@ -12,4 +13,5 @@ export default (app: Express) => {
     app.use('/session', session);
     app.use('/users', users);
     app.use('/buckets', buckets);
+    app.use('/purchases', purchases)
 }

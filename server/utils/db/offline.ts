@@ -9,7 +9,7 @@ interface DBData {
 const DB_PATH = path.resolve('utils', 'db', 'db.json'); 
 console.log("DB Path", DB_PATH);
 
-const KEYS = ['users', 'buckets'];
+const KEYS = ['users', 'buckets', 'purchases'];
 
 const db = {
     set: async (key: string, value: any) => {

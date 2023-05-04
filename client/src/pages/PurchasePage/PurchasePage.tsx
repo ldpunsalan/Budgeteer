@@ -35,6 +35,29 @@ const PurchasePage = () => {
         setDate(d)
     }
 
+    const handleSubmit = async (e: any) => {
+        e.preventDefault()
+        const name = e.target.name.value
+        const value = e.target.value.value
+        const bucketid = e.target.bucketid.value
+        const ddate = e.target.date.value
+
+        const newPurchase = {
+            id: Math.floor(Math.random() * 1000),
+            name,
+            value,
+            bucketid,
+            date: ddate
+        }
+
+        await server.post('/purchases/new', {
+            ...newPurchase
+        })
+
+        alert('Success!')
+        e.target.reset()
+    }
+
     if (loading) {
         return <div>Loading...</div>
     }
@@ -42,11 +65,11 @@ const PurchasePage = () => {
     return (
         <div className={styles['content']}>
             <h2>PURCHASE</h2>
-            <form>
+            <form onSubmit={handleSubmit}>
                 <label>
                     <h3>Purchase Name</h3>
                     <input 
-                        name="purchaseName"
+                        name="name"
                         className="PurchasePageInputs"
                         type="text"
                         placeholder='Where did you spend your money?'
@@ -55,7 +78,7 @@ const PurchasePage = () => {
                 <label>
                     <h3>Amount</h3>
                     <input 
-                        name="purchaseAmount"
+                        name="value"
                         className="PurchasePageInputs"
                         type="number"
                         min="0"
@@ -65,7 +88,7 @@ const PurchasePage = () => {
                 </label>
                 <label>
                     <h3>Bucket</h3>
-                    <select name="bucketName" className="purchasePageInputs" onChange={handleCurrentChange}>
+                    <select name="bucketid" className="purchasePageInputs" onChange={handleCurrentChange}>
                         <option value="" disabled selected>Choose the relevant bucket</option>
                         {
                             buckets.map((bucket : any) => {
@@ -77,7 +100,7 @@ const PurchasePage = () => {
                 <label>
                     <h3>Date</h3>
                     <input
-                        name="purchaseDate"
+                        name="date"
                         className='purchasePageInputs'
                         type="date"
                         onChange={handleDateChange}
