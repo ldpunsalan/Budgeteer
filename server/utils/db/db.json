@@ -42,5 +42,15 @@
       "value": "123",
       "user": "admin@budgeteer.com"
     }
+  ],
+  "purchases": [
+    {
+      "id": 123,
+      "name": "bili mouse",
+      "user": "admin@budgeteer.com",
+      "bucketid": 2,
+      "value": 2700,
+      "date": "2022-05-04"
+    }
   ]
 }
