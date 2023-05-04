@@ -13,5 +13,5 @@ export default (app: Express) => {
     app.use('/session', session);
     app.use('/users', users);
     app.use('/buckets', buckets);
-    app.use('/purchases', purchases)
+    app.use('/purchases', purchases);
 }
