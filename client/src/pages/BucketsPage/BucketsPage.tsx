@@ -11,12 +11,37 @@ import { useContext } from 'react'
 
 
 const BucketsPage = () => {
+    /**
+     * Loading State
+     *  Type: Boolean
+     * This is true while the client side is obtaining the bucket list
+     */
     const [loading, setLoading] = useState(true)
+    /**
+     * Modal State
+     *  Possible Values: 'none' | 'add' | 'edit'
+     * States which interface to show. None refers to the general uneditable view
+     */
     const [modal, setModal] = useState({ status: 'none' })
+    /**
+     * Current Bucket
+     *  Type: Bucket
+     * Contains a COPY of the currently viewed bucket. Serves as a reference for 
+     * the details shown.
+     */
     const [current, setCurrent] = useState<any>({})
+    /**
+     * Bucket List
+     *  Type: List<Bucket>
+     * Contains an UPDATED copy of the user's buckets
+     */
     const [buckets, setBuckets] = useState<any>([])
     const sessionInfo = useContext(SessionContext)
 
+    /**
+     * Initially, the state is set to the list of buckets for
+     * the user
+     */
     useEffect(() => {
         const userID = sessionInfo.user as any
         const fetchBuckets = async () => {
@@ -67,8 +92,17 @@ const BucketsPage = () => {
         }
 
         buckets.forEach((bucket : any) => {
+            update(ref(db,`/${sessionInfo.user}/Buckets/${bucket.id}`),{
+                value: 0
+            })
             resetBucket(bucket.id)
         });
+
+        
+
+
+        console.log('running')
+        server.post('/buckets/reset', {})
 
         setCurrent((prev : any) => ({ ...prev, value: 0 }))
     }
@@ -85,7 +119,7 @@ const BucketsPage = () => {
             alert('Bucket already exists')
         } else {
             const newBucket = {
-                id: buckets.length + 1,
+                id: Math.floor(Math.random() * 1000),
                 name,
                 weight,
                 value
@@ -104,6 +138,9 @@ const BucketsPage = () => {
             })
             setBuckets((prev: any) => [...prev, newBucket])
             setCurrent(newBucket)
+            server.post('/buckets/new', {
+                ...newBucket
+            })
         }
 
         setModal({ status: 'none' })
@@ -152,6 +189,13 @@ const BucketsPage = () => {
             console.log(newBuckets)
             setBuckets(newBuckets)
             setCurrent(newBucket)
+            try {
+                server.post('/buckets/edit', {
+                    ...newBucket
+                })
+            } catch (err) {
+                console.log(err)
+            }
         }
 
         setModal({ status: 'none' })
@@ -230,29 +274,25 @@ const BucketsPage = () => {
     } 
 
     return (
-        <div className={styles['content']}>
-            <h2>BUCKETS</h2>
-            <h1>&#8369;{current.value}</h1>
-            <h3>{current.name}</h3>
-            <select name="bucketName" className="bucketPageInputs" onChange={handleChangeBucket} value={current.id}>
-            {
-                buckets.map((bucket : any) => {
-                    return <option value={bucket.id} id={bucket.id}>{bucket.name}</option>
-                })
-            }
-            </select>
-            <h3>Weight</h3>
-            <input 
-                name="bucketWeight"
-                className="bucketPageInputs"
-                type="number"
-                min="1"
-                value={current.weight}
-                readOnly />
-            <button onClick={() => addBucket()}>Add Bucket</button>
-            <button onClick={() => editBucket()}>Edit Bucket</button>
-            <button onClick={handleDeleteBucket}>Delete Bucket</button>
-            <button onClick={() => resetAll()}>Reset All</button>
+        <div   className={styles['container']}>
+            <div className ={styles['content']}>
+                <h2>BUCKETS</h2>
+                <h1>&#8369;{current.value}</h1>
+                <h3>Name= {current.name}<br />Weight= {current.weight}</h3>
+                <select name="bucketName" className="bucketPageInputs" onChange={handleChangeBucket} value={current.id}>
+                {
+                    buckets.map((bucket : any) => {
+                        return <option value={bucket.id} id={bucket.id}>{bucket.name}</option>
+                    })
+                }
+                </select>
+            </div>
+            <div className={styles['buttons']}>
+                <button onClick={() => addBucket()}>Add Bucket</button>
+                <button onClick={() => editBucket()}>Edit Bucket</button>
+                <button onClick={handleDeleteBucket}>Delete Bucket</button>
+                <button onClick={() => resetAll()}>Reset All</button>
+            </div>
         </div>
     )
 }

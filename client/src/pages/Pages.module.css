@@ -1,7 +1,65 @@
-.content {
+.container {
     display: flex;
     height: calc(100vh - 96px);
     align-content:center;
     justify-content: center;
     flex-direction:column;
+}
+
+.content {
+    display: flex;
+    align-content:center;
+    justify-content: center;
+    flex-direction:column;
+    margin: 50px;
+}
+
+.buttons {
+    display: flex;
+    align-content: flex-start;
+    flex-direction: row;
+    align-content:center;
+    justify-content: center;
+    gap: 50px;
+}
+
+* {
+    text-decoration: none;
+    font-family: 'Creato Display';
+}
+
+select::-ms-expand {
+    display: none;
+ }
+
+select {
+    background: rgba(38, 132, 252, 0.05);
+    box-shadow: inset 0px 0px 3px rgba(0,0,0,0.1);
+    border:none;
+    border-radius:10px;
+    padding:10px;
+}
+
+input {
+    background: rgba(38, 132, 252, 0.05);
+    box-shadow: inset 0px 0px 3px rgba(0,0,0,0.1);
+    border:none;
+    border-radius:10px;
+    padding:10px;
+}
+
+button {
+    border: 1px solid rgba(38, 132, 252, 0.75);
+    border-radius: 20px;
+    background:white;
+    font-size:15px;
+    color:#2684FC;
+    padding:5px 10px;
+    font-family: 'Creato Display';
+}
+
+button:hover{
+    color:white;
+    border-radius: 20px;
+    background:#2684FC;
 }
