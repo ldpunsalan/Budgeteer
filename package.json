@@ -13,6 +13,7 @@
     "date-fns": "^2.29.3",
     "emoji-regex": "^8.0.0",
     "escalade": "^3.1.1",
+    "firebase": "^9.21.0",
     "get-caller-file": "^2.0.5",
     "has-flag": "^4.0.0",
     "is-fullwidth-code-point": "^3.0.0",

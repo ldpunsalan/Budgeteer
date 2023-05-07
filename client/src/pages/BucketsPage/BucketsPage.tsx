@@ -5,7 +5,7 @@ import styles from '../Pages.module.css'
 
 
 import { db } from '../../utils/firebase'
-import { set, ref, update, onValue, get} from "firebase/database"
+import { set, ref, update, onValue, get, remove} from "firebase/database"
 import { SessionContext } from '../../contexts/SessionContext'
 import { useContext } from 'react'
 
@@ -131,6 +131,12 @@ const BucketsPage = () => {
             const B = newBucket.name
             const C = newBucket.weight
             const D = newBucket.value
+            update(ref(db,`/${sessionInfo.user}/Buckets/${current.id}`),{
+                id: A,
+                name: B,
+                weight: C,
+                value: D
+            })
 
             const newBuckets = buckets.map((bucket : any) => {
                 if (bucket.id !== current.id) {
@@ -153,6 +159,7 @@ const BucketsPage = () => {
 
     const handleDeleteBucket = () => {
         const newBuckets = buckets.filter((bucket : any) => bucket.id !== current.id)
+        remove(ref(db,`/${sessionInfo.user}/Buckets/${current.id}`))
         setBuckets(newBuckets)
 
         if (newBuckets.length === 0) {
