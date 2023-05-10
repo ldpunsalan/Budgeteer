@@ -12,7 +12,7 @@ import { useContext } from 'react'
 const PurchasePage = () => {
     const [loading, setLoading] = useState(true)
     const [buckets, setBuckets] = useState<any>([])
-    const [current, setCurrent] = useState('0')
+    const [current, setCurrent] = useState<any>({})
     const [date, setDate] = useState('0000-00-00')
     const sessionInfo = useContext(SessionContext)
 
@@ -22,14 +22,23 @@ const PurchasePage = () => {
 
             get(ref(db)).then((snapshot)=>{
                 const data = snapshot.val()
+
+                if (!data[userID].Buckets)
+                {   
+                    setCurrent(null)
+                    setBuckets([])
+                    setLoading(false)
+                }
+                else{
+                    let arr = Object.entries(data[userID].Buckets)
                 
+                    let bucketList : any[] = [] // populate this
+                    bucketList = arr.map((cur) => cur[1])
                 
-                let arr = Object.entries(data[userID].Buckets)
-                let bucketList : any[] = [] // populate this
-                bucketList = arr.map((cur) => cur[1])
+                    setBuckets(bucketList)
+                    setLoading(false)
+                }
                 
-                setBuckets(bucketList)
-                setLoading(false)
             })
 
             

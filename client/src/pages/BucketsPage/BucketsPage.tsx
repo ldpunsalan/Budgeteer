@@ -48,14 +48,23 @@ const BucketsPage = () => {
 
             get(ref(db)).then((snapshot)=>{
                 const data = snapshot.val()
+
+                if (!data[userID].Buckets)
+                {   
+                    setCurrent(null)
+                    setBuckets([])
+                    setLoading(false)
+                }
+                else{
+                    let arr = Object.entries(data[userID].Buckets)
                 
+                    let bucketList : any[] = [] // populate this
+                    bucketList = arr.map((cur) => cur[1])
                 
-                let arr = Object.entries(data[userID].Buckets)
-                let bucketList : any[] = [] // populate this
-                bucketList = arr.map((cur) => cur[1])
+                    setBuckets(bucketList)
+                    setLoading(false)
+                }
                 
-                setBuckets(bucketList)
-                setLoading(false)
             })
 
             
