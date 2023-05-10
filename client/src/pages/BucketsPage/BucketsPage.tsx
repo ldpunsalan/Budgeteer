@@ -45,10 +45,8 @@ const BucketsPage = () => {
     useEffect(() => {
         const userID = sessionInfo.user as any
         const fetchBuckets = async () => {
-
             get(ref(db)).then((snapshot)=>{
                 const data = snapshot.val()
-
                 if (!data[userID].Buckets)
                 {   
                     setCurrent(null)
@@ -56,8 +54,9 @@ const BucketsPage = () => {
                     setLoading(false)
                 }
                 else{
+                    setCurrent(data[userID].Buckets)
                     let arr = Object.entries(data[userID].Buckets)
-                
+                    setCurrent(arr[0][1])
                     let bucketList : any[] = [] // populate this
                     bucketList = arr.map((cur) => cur[1])
                 
