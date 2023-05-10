@@ -3,22 +3,36 @@ import { useEffect, useState } from 'react'
 import server from '../../utils/server'
 import styles from '../Pages.module.css'
 
+import { db } from '../../utils/firebase'
+import { set, ref, update, onValue, get, remove} from "firebase/database"
+import { SessionContext } from '../../contexts/SessionContext'
+import { useContext } from 'react'
+
+
 const PurchasePage = () => {
     const [loading, setLoading] = useState(true)
-    const [buckets, setBuckets] = useState([])
+    const [buckets, setBuckets] = useState<any>([])
     const [current, setCurrent] = useState('0')
     const [date, setDate] = useState('0000-00-00')
+    const sessionInfo = useContext(SessionContext)
 
     useEffect(() => {
+        const userID = sessionInfo.user as any
         const fetchBuckets = async () => {
-            try {
-                const res = await server.get('buckets')
-                const data = res.data.data
-                setBuckets(data)
+
+            get(ref(db)).then((snapshot)=>{
+                const data = snapshot.val()
+                
+                
+                let arr = Object.entries(data[userID].Buckets)
+                let bucketList : any[] = [] // populate this
+                bucketList = arr.map((cur) => cur[1])
+                
+                setBuckets(bucketList)
                 setLoading(false)
-            } catch (err : any) {
-                alert(err.response.data.msg)
-            }
+            })
+
+            
         }
         fetchBuckets()
     }, [])
@@ -50,7 +64,21 @@ const PurchasePage = () => {
             date: ddate
         }
 
-        await server.post('/purchases/new', {
+        const A = newPurchase.id
+        const B = newPurchase.name
+        const C = newPurchase.value
+        const D = newPurchase.bucketid
+        const E = newPurchase.date
+
+        set(ref(db,`/${sessionInfo.user}/Buckets/${D}/Purchases/${A}`), {
+            id: A,
+            name: B,
+            value: C,
+            bucketid: D,
+            date: E,
+        })
+        
+        server.post('/purchases/new', {
             ...newPurchase
         })
 
