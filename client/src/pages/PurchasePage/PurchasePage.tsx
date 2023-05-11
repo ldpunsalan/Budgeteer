@@ -97,6 +97,11 @@ const PurchasePage = () => {
         const bucketid = e.target.bucketid.value
         const ddate = e.target.date.value
 
+        const relevantBucket = buckets.filter((bucket: any) => bucket.id == bucketid)[0]
+        if (parseInt(value) > parseInt(relevantBucket.value)) {
+            return alert('Value cannot exceed the current bucket amount')
+        }
+
         const newPurchase = {
             id: Math.floor(Math.random() * 1000),
             name,
@@ -150,6 +155,13 @@ const PurchasePage = () => {
         const value = e.target.value.value
         const bucketid = current.bucketid
         const ddate = e.target.date.value
+
+        const relevantBucket = buckets.filter((bucket: any) => bucket.id == bucketid)[0]
+        const _oldValue = parseInt(relevantBucket.value) + parseInt(current.value)
+        const _newValue = _oldValue - parseInt(value)
+        if (_newValue < 0) {
+            return alert('Bucket value cannot go negative')
+        }
 
         const newPurchase = {
             id: current.id,
