@@ -36,6 +36,8 @@ function App() {
   const [sessionInfo, setSessionInfo] = useState<SessionType>(defaultSessionInfo)
   const [sessionVerb, setSessionVerb] = useState<SessionVerbType>({
     login: (e) => {
+      // save on localStorage
+      localStorage.setItem('user', e.toString())
       setSessionInfo(prev => {
         return {
           ...prev,
@@ -45,6 +47,8 @@ function App() {
       console.log("logged in", e)
     },
     logout: () => {
+      // remove from localStorage
+      localStorage.removeItem('user')
       setSessionInfo(prev => {
         return {
           ...prev,
@@ -68,7 +72,18 @@ function App() {
         loading: false
       }))
     }
-    getUser();
+    // use if firebase
+    const getUserFirebase = () => {
+      const user = localStorage.getItem('user')
+      if (user) {
+        sessionVerb.login(user)
+      }
+      setSessionInfo(prev => ({
+        ...prev,
+        loading: false
+      }))
+    }
+    getUserFirebase();
   }, [])
 
   const logoutSession = async () => {
