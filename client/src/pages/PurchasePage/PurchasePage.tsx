@@ -177,6 +177,14 @@ const PurchasePage = () => {
                     }
                 }
                 set(ref(db, `/${userID}/Buckets/${bucketid}`), newBucket)
+                const newPurchases = purchases.map((purchase: any) => {
+                    if (purchase.id === current.id) {
+                        return newPurchase
+                    } else {
+                        return purchase
+                    }
+                })
+                setPurchases(newPurchases)
             } catch (err) {
                 alert('Something went wrong!')
                 console.log(err)
