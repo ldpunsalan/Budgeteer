@@ -111,15 +111,6 @@ const PurchasePage = () => {
         const D = newPurchase.bucketid
         const E = newPurchase.date
 
-        // upload the purchase
-        set(ref(db,`/${sessionInfo.user}/Buckets/${D}/Purchases/${A}`), {
-            id: A,
-            name: B,
-            value: C,
-            bucketid: D,
-            date: E,
-        })
-
         // modify the database
         get(ref(db)).then((snapshot) => {
             const userID = sessionInfo.user as any
@@ -156,7 +147,6 @@ const PurchasePage = () => {
         e.preventDefault()
         const name = e.target.name.value
         const value = e.target.value.value
-        const bucketid = e.target.bucketid.value
         const ddate = e.target.date.value
 
         const newPurchase = {
@@ -181,9 +171,9 @@ const PurchasePage = () => {
             date: E,
         })
         
-        server.post('/purchases/new', {
-            ...newPurchase
-        })
+        // server.post('/purchases/new', {
+        //     ...newPurchase
+        // })
 
         alert('Success!')
         setModal({ status: 'none' })
@@ -205,7 +195,7 @@ const PurchasePage = () => {
         return (
             <div className={styles['content']}>
             <h2>EDIT PURCHASE</h2>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleEditSubmit}>
                 <label>
                     <h3>Purchase Name</h3>
                     <input 
