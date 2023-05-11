@@ -147,6 +147,7 @@ const PurchasePage = () => {
         e.preventDefault()
         const name = e.target.name.value
         const value = e.target.value.value
+        const bucketid = current.bucketid
         const ddate = e.target.date.value
 
         const newPurchase = {
@@ -157,23 +158,29 @@ const PurchasePage = () => {
             date: ddate
         }
 
-        const A = newPurchase.id
-        const B = newPurchase.name
-        const C = newPurchase.value
-        const D = newPurchase.bucketid
-        const E = newPurchase.date
-
-        set(ref(db,`/${sessionInfo.user}/Buckets/${D}/Purchases/${A}`), {
-            id: A,
-            name: B,
-            value: C,
-            bucketid: D,
-            date: E,
+        // modify the database
+        get(ref(db)).then((snapshot) => {
+            const userID = sessionInfo.user as any
+            const data = snapshot.val()
+            try {
+                // assume that the bucket exists
+                const bucket = data[userID].Buckets[bucketid]
+                const oldValue = parseInt(bucket.value) + parseInt(current.value)
+                const newValue = oldValue - parseInt(value)
+                const newBucket = {
+                    ...bucket,
+                    value: newValue,
+                    Purchases: {
+                        ...bucket.Purchases,
+                        [current.id]: newPurchase
+                    }
+                }
+                set(ref(db, `/${userID}/Buckets/${bucketid}`), newBucket)
+            } catch (err) {
+                alert('Something went wrong!')
+                console.log(err)
+            }
         })
-        
-        // server.post('/purchases/new', {
-        //     ...newPurchase
-        // })
 
         alert('Success!')
         setModal({ status: 'none' })
@@ -181,6 +188,7 @@ const PurchasePage = () => {
 
      const handleSetEdit = (purchase: any) => {
         setCurrent(purchase)
+        setModal({ status: 'edit' })
      }
 
      const handleDelete = (purchase: any) => {
