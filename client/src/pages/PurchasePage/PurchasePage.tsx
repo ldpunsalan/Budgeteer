@@ -201,7 +201,27 @@ const PurchasePage = () => {
      }
 
      const handleDelete = (purchase: any) => {
-        
+        const bucketid = purchase.bucketid
+        // remove from database
+        get(ref(db)).then((snapshot) => {
+            const userID = sessionInfo.user as any
+            const data = snapshot.val()
+            try {
+                const bucket = data[userID].Buckets[bucketid]
+                const newPurchases = { ...bucket.Purchases }
+                delete newPurchases[purchase.id]
+                const newBucket = {
+                    ...bucket,
+                    value: parseInt(bucket.value) + parseInt(purchase.value),
+                    Purchases: newPurchases
+                }
+                set(ref(db, `/${userID}/Buckets/${bucketid}`), newBucket)
+                setPurchases((prev: any) => prev.filter((p: any) => purchase.id != p.id))
+            } catch (err) {
+                alert('Something went wrong!')
+                console.log(err)
+            }
+        })
      }
 
     if (loadingState.buckets) {
