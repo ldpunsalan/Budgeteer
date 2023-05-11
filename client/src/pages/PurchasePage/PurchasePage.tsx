@@ -296,7 +296,7 @@ const PurchasePage = () => {
                 </label>
                 <label>
                     <h3>Bucket</h3>
-                    <select name="bucketid" className="purchasePageInputs" >
+                    <select name="bucketid" className="purchasePageInputs" required>
                         <option value="" disabled selected>Choose the relevant bucket</option>
                         {
                             buckets.map((bucket : any) => {
