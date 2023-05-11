@@ -16,7 +16,7 @@ const PurchasePage = () => {
     })
     const [modal, setModal] = useState({ status: 'none' })
     const [buckets, setBuckets] = useState<any>([])
-    const [purchases, setPurchases] = useState([])
+    const [purchases, setPurchases] = useState<any>([])
     const [current, setCurrent] = useState<any>({})
     const sessionInfo = useContext(SessionContext)
 
@@ -129,6 +129,7 @@ const PurchasePage = () => {
                     Purchases: newPurchases
                 }
                 set(ref(db, `/${userID}/Buckets/${bucketid}`), newBucket)
+                setPurchases((prev: any) => [...prev, newPurchase])
             } catch (err) {
                 alert('Something went wrong!')
                 console.log(err)
@@ -192,7 +193,7 @@ const PurchasePage = () => {
      }
 
      const handleDelete = (purchase: any) => {
-        alert('clicked!')
+        
      }
 
     if (loadingState.buckets) {
