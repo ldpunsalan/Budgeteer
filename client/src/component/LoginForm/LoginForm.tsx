@@ -9,10 +9,6 @@ import styles from './LoginForm.module.css';
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from '../../utils/firebase'
 
-/**
- * A component for rendering the log-in page.
- * @function LoginForm
-*/
 const LoginForm = () => {
     const sessionInfo = useContext(SessionContext)
     const sessionVerb = useContext(SessionVerbs)
