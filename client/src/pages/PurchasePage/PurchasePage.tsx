@@ -286,61 +286,63 @@ const PurchasePage = () => {
     } 
 
     return (
-        <div className={styles['content']}>
-            <h2>PURCHASE</h2>
-            <form onSubmit={handleSubmit}>
-                <label>
-                    <h3>Purchase Name</h3>
-                    <input 
-                        name="name"
-                        className="PurchasePageInputs"
-                        type="text"
-                        placeholder='Where did you spend your money?'
-                        required/>
-                </label>
-                <label>
-                    <h3>Amount</h3>
-                    <input 
-                        name="value"
-                        className="PurchasePageInputs"
-                        type="number"
-                        min="0"
-                        placeholder='How much did you spend?'
-                        required/>
+        <div className={styles['container']}>
+            <div className={styles['content']}>
+                <h2>PURCHASE</h2>
+                <form onSubmit={handleSubmit}>
+                    <label>
+                        <h3>Purchase Name</h3>
+                        <input 
+                            name="name"
+                            className="PurchasePageInputs"
+                            type="text"
+                            placeholder='Where did you spend your money?'
+                            required/>
+                    </label>
+                    <label>
+                        <h3>Amount</h3>
+                        <input 
+                            name="value"
+                            className="PurchasePageInputs"
+                            type="number"
+                            min="0"
+                            placeholder='How much did you spend?'
+                            required/>
 
-                </label>
-                <label>
-                    <h3>Bucket</h3>
-                    <select name="bucketid" className="purchasePageInputs" required>
-                        <option value="" disabled selected>Choose the relevant bucket</option>
-                        {
-                            buckets.map((bucket : any) => {
-                                return <option value={bucket.id} id={bucket.id}>{bucket.name}</option>
-                            })
-                        }
-                    </select>
-                </label>
-                <label>
-                    <h3>Date</h3>
-                    <input
-                        name="date"
-                        className='purchasePageInputs'
-                        type="date"
-                        required/>
-                </label>
-                <input type='submit' value='Create Purchase' />
-            </form>
-            <div>
-                <h3>Purchases</h3>
-            {
-                purchases.map((purchase: any) => (
-                    <li>
-                        {purchase.name}: {purchase.value}
-                        <button onClick={() => handleSetEdit(purchase)}>EDIT</button>
-                        <button onClick={() => handleDelete(purchase)}>DELETE</button>
-                    </li>
-                ))
-            }
+                    </label>
+                    <label>
+                        <h3>Bucket</h3>
+                        <select name="bucketid" className="purchasePageInputs" required>
+                            <option value="" disabled selected>Choose the relevant bucket</option>
+                            {
+                                buckets.map((bucket : any) => {
+                                    return <option value={bucket.id} id={bucket.id}>{bucket.name}</option>
+                                })
+                            }
+                        </select>
+                    </label>
+                    <label>
+                        <h3>Date</h3>
+                        <input
+                            name="date"
+                            className='purchasePageInputs'
+                            type="date"
+                            required/>
+                    </label>
+                    <input type='submit' value='Create Purchase' className={styles['button']}/>
+                </form>
+                <div>
+                    <h3>Purchases</h3>
+                {
+                    purchases.map((purchase: any) => (
+                        <li>
+                            {purchase.name}: {purchase.value}
+                            <button onClick={() => handleSetEdit(purchase)}>EDIT</button>
+                            <button onClick={() => handleDelete(purchase)}>DELETE</button>
+                        </li>
+                    ))
+                }
+                </div>
             </div>
         </div>
     )

@@ -109,23 +109,25 @@ const PaycheckPage = () => {
     }
     else {
         return (
-            <div className={styles['content']}>
-                <h2>PAYCHECK</h2>
-                <form name='paycheckForm' onSubmit={handleSubmit}>
-                    <label>
-                    <h3>Paycheck Amount</h3>
-                    <h1>&#8369;{current.value}</h1>
-                    <input 
-                        name="paycheckAmount"
-                        className="paycheckPageInputs"
-                        type="number"
-                        min="1"
-                        placeholder='How much is your overall budget?'
-                        required/>
-                    </label>
-                    <input onClick={() => setUpdate(true)} name='updateButton' type='submit' value='Update Paycheck'></input>
-                    <input onClick={() => setUpdate(false)}name='undoButton' type='submit' value='Undo' formNoValidate></input>
-                </form>
+            <div className={styles['container']}>
+                <div className={styles['content']}>
+                    <h2>PAYCHECK</h2>
+                    <form name='paycheckForm' onSubmit={handleSubmit}>
+                        <label>
+                        <h3>Paycheck Amount</h3>
+                        <h1>&#8369;{current.value}</h1>
+                        <input 
+                            name="paycheckAmount"
+                            className="paycheckPageInputs"
+                            type="number"
+                            min="1"
+                            placeholder='How much is your overall budget?'
+                            required/>
+                        </label>
+                        <input onClick={() => setUpdate(true)} name='updateButton' type='submit' value='Update Paycheck' className={styles['button']}></input>
+                        <input onClick={() => setUpdate(false)}name='undoButton' type='submit' value='Undo' formNoValidate className={styles['button']}></input>
+                    </form>
+                </div>
             </div>
         )
     }

@@ -4,6 +4,11 @@
     align-content:center;
     justify-content: center;
     flex-direction:column;
+    border:none;
+    border-radius:10px;
+    background:white;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
+    margin: 50px;
 }
 
 .content {
@@ -48,18 +53,31 @@ input {
     padding:10px;
 }
 
-button {
+button, .button {
     border: 1px solid rgba(38, 132, 252, 0.75);
-    border-radius: 20px;
-    background:white;
     font-size:15px;
-    color:#2684FC;
     padding:5px 10px;
     font-family: 'Creato Display';
-}
+    transition: 0.2s;
 
-button:hover{
     color:white;
     border-radius: 20px;
     background:#2684FC;
+}
+
+button:hover, .button:hover{
+    color:#2684FC;
+    border-radius: 20px;
+    background:white;
+}
+
+h2 {
+    font-size: 30px;
+    font-style: bold;
+    color: #2684FC;
+    text-decoration: none;
+}
+
+body {
+    background-color:#2684FC;
 }

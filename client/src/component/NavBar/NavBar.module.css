@@ -1,26 +1,41 @@
 nav {
     display: flex;
-    align-content: flex-start;
-    justify-content: space-evenly;
-    gap: 50px;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: left;
+    height: 100vh;
+    gap:50px;
+    width: 12%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: white;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
+}
+
+nav :first-child {
+    margin-top: 100%;
 }
 
 nav > * {
+    margin-left: 20%;
+    margin-right: 10%;
     text-decoration: none;
     color:#2684FC;
     border-radius: 20px;
-    padding:5px 10px;
+    padding: 5px 10px;
     font-family: 'Creato Display';
+    text-align:left;
 }
 
 nav > * {
-    transition: 0.5s;
+    transition: 0.2s;
 }
 
 nav > *:hover {
     color:white;
     border-radius: 40px;
-    background:#2684FC;
+    background: #2684FC;
 }
 
 .active {
@@ -30,8 +45,15 @@ nav > *:hover {
 }
 
 .logout-button {
+    color: #2684FC;
     font-size:15px;
     border: 1px solid rgba(38, 132, 252, 0.75);
     border-radius: 20px;
     background:white;
+}
+
+.logout-button:hover {
+    color:white;
+    border-radius: 40px;
+    background:#2684FC;
 }

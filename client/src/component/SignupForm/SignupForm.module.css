@@ -1,10 +1,15 @@
 .app-container {
     padding: 24px;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
     gap:50px;
     height: calc(100vh - 96px);
+    width: 900px;
     align-items:center;
+    border:none;
+    border-radius:20px;
+    background:white;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
 }
 
 input[type="email"] {
@@ -52,6 +57,16 @@ input[type="password"] {
     font-size: 25px;
     line-height: 30px;
     color: #FFFFFF;
+
+    transition:0.3s;
+}
+
+.button:hover{
+    color: #2684FC;
+    background: white;
+    box-shadow: 0px 0px 20px rgba(58, 100, 232, 0.5);
+    border: none;
+    border-radius: 10px;
 }
 
 .header {
@@ -59,6 +74,7 @@ input[type="password"] {
     font-style: italic;
     color: #2684FC;
     text-decoration: none;
+    margin-left:5%;
 }
 
 .text {
@@ -78,7 +94,7 @@ input[type="password"] {
 
     text-decoration-line: underline;
 
-    color: rgba(0, 0, 0, 0.75);
+    color: #2684FC;
 }
 
 .error {
