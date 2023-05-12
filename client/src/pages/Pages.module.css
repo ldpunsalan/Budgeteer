@@ -63,6 +63,7 @@ button, .button {
     color:white;
     border-radius: 20px;
     background:#2684FC;
+    text-align:center;
 }
 
 button:hover, .button:hover{
