@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react'
-import { Outlet, Link } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 
 import { SessionType, SessionContext, SessionVerbType, SessionVerbs } from './contexts/SessionContext';
-import server from './utils/server';
 
 import styles from "./App.module.css";
 
@@ -62,17 +61,6 @@ function App() {
   // Try to retrieve the user session from the server
   // when the client refreshes
   useEffect(() => {
-    const getUser = async () => {
-      const res = await server.get('session');
-      if (res.data.user) {
-        sessionVerb.login(res.data.user)
-      }
-      setSessionInfo(prev => ({
-        ...prev,
-        loading: false
-      }))
-    }
-    // use if firebase
     const getUserFirebase = () => {
       const user = localStorage.getItem('user')
       if (user) {
@@ -85,11 +73,6 @@ function App() {
     }
     getUserFirebase();
   }, [])
-
-  const logoutSession = async () => {
-    await server.get('logout');
-    sessionVerb.logout()
-  }
 
   return (
     <SessionVerbs.Provider value={sessionVerb}>
