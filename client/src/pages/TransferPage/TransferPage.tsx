@@ -9,6 +9,10 @@ import { set, ref, update, onValue, get, remove} from "firebase/database"
 import { SessionContext } from '../../contexts/SessionContext'
 import { useContext } from 'react'
 
+/**
+ * A component for rendering the fund transfer page.
+ * @function TransferPage
+*/
 const TransferPage = () => {
     const [loading, setLoading] = useState(true)
     const [source, setSource] = useState<any>()

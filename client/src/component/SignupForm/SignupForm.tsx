@@ -11,7 +11,10 @@ import { set, ref} from "firebase/database"
 import {db} from "../../utils/firebase"
 
 
-
+/**
+ * A function defining the required password characters.
+ * @function passOpt
+*/
 const passOpt = {
     minLength: 8,
     minLowercase: 1,
@@ -20,6 +23,10 @@ const passOpt = {
     minSymbols: 1
 }
 
+/**
+ * A component for rendering the sign-up page.
+ * @function SignupForm
+*/
 const SignupForm = () => {
     const sessionInfo = useContext(SessionContext)
     const navigate = useNavigate()
@@ -32,7 +39,11 @@ const SignupForm = () => {
     const [errorMessage2, setErrorMessage2] = useState('');
 
     /* Use alerts or not/ can switch to custom error message on handleSubmit (button press)1 */
-
+    
+    /**
+     * Handles form submission for user registration
+     * @param {Object} e - Event object for form submission
+    */
     const handleSubmit = async (e: any) => {
         e.preventDefault()
 
@@ -73,7 +84,10 @@ const SignupForm = () => {
         } 
     }
 
-
+    /**
+     * Update input state based on event target value
+     * @param {Object} e - The target value
+    */
     const handleInputChange = (e: any) => {
         const value = e.target.value
         const name = e.target.name

@@ -9,6 +9,10 @@ import { set, ref, update, onValue, get, remove} from "firebase/database"
 import { SessionContext } from '../../contexts/SessionContext'
 import { useContext } from 'react'
 
+/**
+ * A component for rendering the paycheck page.
+ * @function PaycheckPage
+*/
 const PaycheckPage = () => {
     const [loading, setLoading] = useState(true)
     const [isUpdate, setUpdate] = useState<any>([])

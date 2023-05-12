@@ -8,7 +8,10 @@ import { set, ref, update, onValue, get, remove} from "firebase/database"
 import { SessionContext } from '../../contexts/SessionContext'
 import { useContext } from 'react'
 
-
+/**
+ * A component for rendering the paycheck page.
+ * @function PurchasePage
+*/
 const PurchasePage = () => {
     const [loadingState, setLoadingState] = useState({
         buckets: true,

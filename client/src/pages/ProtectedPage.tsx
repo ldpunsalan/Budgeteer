@@ -8,6 +8,10 @@ type Props = {
     children: React.ReactNode;
 }
 
+/**
+ * A component for rendering the page functionalities if there's a database connection.
+ * @function ProtectedPage
+*/
 const ProtectedPage = ({ children }: Props) => {
     const sessionInfo = useContext(SessionContext)
 

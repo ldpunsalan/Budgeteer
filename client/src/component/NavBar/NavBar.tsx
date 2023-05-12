@@ -5,10 +5,19 @@ import { SessionContext, SessionVerbs } from '../../contexts/SessionContext';
 import server from '../../utils/server';
 import styles from './NavBar.module.css';
 
+/**
+ * A component for rendering the navigation bar.
+ * @function NavBar
+*/
 const NavBar = () => {
     const sessionInfo = useContext(SessionContext)
     const sessionVerb = useContext(SessionVerbs)
 
+    /**
+     * Logs the user out of their session.
+     * @function logoutSession
+     * @async
+    */    
     const logoutSession = async () => {
         await server.get('logout');
         sessionVerb.logout()

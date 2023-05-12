@@ -4,6 +4,10 @@ import { SessionContext } from '../../contexts/SessionContext'
 import NavBar from '../../component/NavBar/NavBar'
 import styles from '../Pages.module.css'
 
+/**
+ * A component for rendering the dashboard when the user makes a successful log-in.
+ * @function DashboardPage
+*/
 const DashboardPage = () => {
     const sessionInfo = useContext(SessionContext)
 

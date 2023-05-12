@@ -9,7 +9,10 @@ import { set, ref, update, onValue, get, remove} from "firebase/database"
 import { SessionContext } from '../../contexts/SessionContext'
 import { useContext } from 'react'
 
-
+/**
+ * A component for rendering the buckets page.
+ * @function BucketsPage
+*/
 const BucketsPage = () => {
     /**
      * Loading State
@@ -32,7 +35,7 @@ const BucketsPage = () => {
     const [current, setCurrent] = useState<any>({})
     /**
      * Bucket List
-     *  Type: List<Bucket>
+     * Type: List<Bucket>
      * Contains an UPDATED copy of the user's buckets
      */
     const [buckets, setBuckets] = useState<any>([])
