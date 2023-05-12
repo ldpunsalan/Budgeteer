@@ -1,13 +1,10 @@
-import { useEffect, useState } from 'react'
-
-import server from '../../utils/server'
+import { useEffect, useState, useContext } from 'react'
+import { ref, update, get } from "firebase/database"
 
 import styles from '../Pages.module.css'
 
 import { db } from '../../utils/firebase'
-import { set, ref, update, onValue, get, remove} from "firebase/database"
 import { SessionContext } from '../../contexts/SessionContext'
-import { useContext } from 'react'
 
 /**
  * A component for rendering the fund transfer page.
@@ -20,32 +17,27 @@ const TransferPage = () => {
     const [buckets, setBuckets] = useState<any>([])
     const [amount, setAmount] = useState<any>()
     const sessionInfo = useContext(SessionContext)
+
     useEffect(() => {
         const userID = sessionInfo.user as any
+
         const fetchBuckets = async () => {
+            const snapshot = await get(ref(db))
+            const data = snapshot.val()
 
-            get(ref(db)).then((snapshot)=>{
-                const data = snapshot.val()
-
-                if (!data[userID].Buckets)
-                {   
-                    setBuckets([])
-                    setLoading(false)
-                }
-                else{
-                    let arr = Object.entries(data[userID].Buckets)
-                
-                    let bucketList : any[] = [] // populate this
-                    bucketList = arr.map((cur) => cur[1])
-                
-                    setBuckets(bucketList)
-                    setLoading(false)
-                }
-                
-            })
-
+            if (!data[userID].Buckets) {   
+                setBuckets([])
+                setLoading(false)
+            } else {
+                const arr = Object.entries(data[userID].Buckets)
+                let bucketList : any[] = [] 
+                bucketList = arr.map((cur) => cur[1])
+                setBuckets(bucketList)
+                setLoading(false)
+            }
             
         }
+
         fetchBuckets()
     }, [])
 
@@ -70,9 +62,6 @@ const TransferPage = () => {
     const handleTransferFunds = (e: any) => {
         e.preventDefault()
 
-        console.log("src:", source)
-        console.log("rec", recipient)
-
         if (source === undefined) {
             return alert('Please choose a source bucket')
         } else if (recipient === undefined) {
@@ -83,45 +72,34 @@ const TransferPage = () => {
         const recBucket = buckets.filter((bucket : any) => bucket.id == recipient)[0]
         const srcValue = srcBucket.value
         const recValue = recBucket.value
-        // Spot errors
+
+        // Handle errors
         if (srcBucket.id === recBucket.id) {
-            alert('ERROR: Source and recipient buckets cannot be the same.')
-            return
+            return alert('ERROR: Source and recipient buckets cannot be the same.')
         }
         else if (parseInt(srcValue) < parseInt(amount)) {
-            alert("ERROR: Amount cannot be greater than source bucket's value.")
-            return
+            return alert("ERROR: Amount cannot be greater than source bucket's value.")
         }
         else if (isNaN(amount)) {
-            alert("ERROR: Please enter a valid amount.")
-            return
+            return alert("ERROR: Please enter a valid amount.")
         }
 
         if (confirm('Do you want to proceed?')) {
             const newSrc = {
                 ...srcBucket,
                 value: parseInt(srcValue) - parseInt(amount)
-                
             }
 
-            // FIREBASE //
-            update(ref(db,`/${sessionInfo.user}/Buckets/${source}`),{
-                value:  parseInt(srcValue) - parseInt(amount)
-            })
-             // FIREBASE //
-
-             
             const newRec = {
                 ...recBucket, 
                 value: parseInt(recValue) + parseInt(amount)
             }
+            
+            // update the database
+            update(ref(db,`/${sessionInfo.user}/Buckets/${source}`), newSrc)
+            update(ref(db,`/${sessionInfo.user}/Buckets/${recipient}`), newRec)
 
-             // FIREBASE //
-            update(ref(db,`/${sessionInfo.user}/Buckets/${recipient}`),{
-                value: parseInt(recValue) + parseInt(amount)
-            })
-             // FIREBASE //
-
+            // update the ram
             setBuckets((prev:any) => prev.map((bucket : any) => {
                 if (bucket.id == srcBucket.id) {
                     return newSrc
@@ -131,22 +109,12 @@ const TransferPage = () => {
                     return bucket
                 }
             }))
-            server.post('/buckets/transfer', {
-                src: newSrc,
-                rec: newRec
-            })
-          } else {
-            return
           }
     }
 
-    useEffect(() => {
-        console.log(buckets)
-    }, [buckets])
     if (loading) {
         return <p>loading...</p>
-    }
-    else {
+    } else {
         return (
             <div className={styles['container']}>
                 <div className={styles['content']}>

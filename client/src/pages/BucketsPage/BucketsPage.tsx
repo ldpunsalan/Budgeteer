@@ -1,13 +1,22 @@
-import { useEffect, useState } from 'react'
-
-import server from '../../utils/server'
-import styles from '../Pages.module.css'
-
+import { useEffect, useState, useContext } from 'react'
+import { set, ref, update, get, remove} from "firebase/database"
 
 import { db } from '../../utils/firebase'
-import { set, ref, update, onValue, get, remove} from "firebase/database"
 import { SessionContext } from '../../contexts/SessionContext'
-import { useContext } from 'react'
+
+import styles from '../Pages.module.css'
+
+/**
+ * Describes the current view mode.
+ * none - read, shows the current bucket information
+ * add - create, the user can create a new bucket
+ * edit - update, the can modify an existing bucket
+ */
+const MODAL_STATUS = {
+    none: 'none',
+    add: 'add',
+    edit: 'edit'
+}
 
 /**
  * A component for rendering the buckets page.
@@ -25,7 +34,7 @@ const BucketsPage = () => {
      *  Possible Values: 'none' | 'add' | 'edit'
      * States which interface to show. None refers to the general uneditable view
      */
-    const [modal, setModal] = useState({ status: 'none' })
+    const [modal, setModal] = useState({ status: MODAL_STATUS.none })
     /**
      * Current Bucket
      *  Type: Bucket
@@ -47,49 +56,39 @@ const BucketsPage = () => {
      */
     useEffect(() => {
         const userID = sessionInfo.user as any
-        const fetchBuckets = async () => {
-            get(ref(db)).then((snapshot)=>{
-                const data = snapshot.val()
-                if (!data[userID].Buckets)
-                {   
-                    setCurrent(null)
-                    setBuckets([])
-                    setLoading(false)
-                }
-                else{
-                    setCurrent(data[userID].Buckets)
-                    let arr = Object.entries(data[userID].Buckets)
-                    setCurrent(arr[0][1])
-                    let bucketList : any[] = [] // populate this
-                    bucketList = arr.map((cur) => cur[1])
-                
-                    setBuckets(bucketList)
-                    setLoading(false)
-                }
-                
-            })
 
-            
+        const fetchBuckets = async () => {
+            const snapshot = await get(ref(db))
+            const data = snapshot.val()
+
+            if (!data[userID].Buckets) {   
+                setCurrent(null)
+                setBuckets([])
+            } else {
+                setCurrent(data[userID].Buckets)
+                const userBuckets = Object.entries(data[userID].Buckets)
+                setCurrent(userBuckets[0][1])
+                let bucketList : any[] = [] 
+                bucketList = userBuckets.map((cur) => cur[1])
+                setBuckets(bucketList)
+            }
+            setLoading(false)
         }
+
         fetchBuckets()
     }, [])
 
     const addBucket = () => {
-        setModal({
-            status: 'add'
-        })
+        setModal({ status: MODAL_STATUS.add })
     }
 
     const editBucket = () => {
-        setModal({
-            status: 'edit'
-        })
+        setModal({ status: MODAL_STATUS.edit })
     }
 
     const resetAll = () => {
         // sets the bucket's value to 0
         const resetBucket = async (id : string) => {
-            // for now, i'm just setting the local values to 0
             setBuckets((prev : any) => prev.map((bucket : any) => {
                 if (bucket.id == id) {
                     return {
@@ -102,6 +101,7 @@ const BucketsPage = () => {
             }))
         }
 
+        // reset each bucket in the database and ram
         buckets.forEach((bucket : any) => {
             update(ref(db,`/${sessionInfo.user}/Buckets/${bucket.id}`),{
                 value: 0
@@ -109,12 +109,7 @@ const BucketsPage = () => {
             resetBucket(bucket.id)
         });
 
-        
-
-
-        console.log('running')
-        server.post('/buckets/reset', {})
-
+        // update the currently showing bucket
         setCurrent((prev : any) => ({ ...prev, value: 0 }))
     }
 
@@ -129,32 +124,22 @@ const BucketsPage = () => {
         if (exist.length > 0) {
             alert('Bucket already exists')
         } else {
+            // create the new bucket
             const newBucket = {
                 id: Math.floor(Math.random() * 1000),
                 name,
                 weight,
                 value
             }   
-            
-            const A = newBucket.id
-            const B = newBucket.name
-            const C = newBucket.weight
-            const D = newBucket.value
 
-            set(ref(db,`/${sessionInfo.user}/Buckets/${A}`), {
-                id: A,
-                name: B,
-                weight: C,
-                value: D
-            })
+            // update the database and ram
+            set(ref(db, `/${sessionInfo.user}/Buckets/${newBucket.id}`), newBucket)
             setBuckets((prev: any) => [...prev, newBucket])
             setCurrent(newBucket)
-            server.post('/buckets/new', {
-                ...newBucket
-            })
         }
 
-        setModal({ status: 'none' })
+        // set the view mode to default
+        setModal({ status: MODAL_STATUS.none })
     }
 
     const handleEditBucket = (e: any) => {
@@ -175,16 +160,8 @@ const BucketsPage = () => {
                 value
             }
             
-            const A = newBucket.id
-            const B = newBucket.name
-            const C = newBucket.weight
-            const D = newBucket.value
-            update(ref(db,`/${sessionInfo.user}/Buckets/${current.id}`),{
-                id: A,
-                name: B,
-                weight: C,
-                value: D
-            })
+            // update the database
+            update(ref(db, `/${sessionInfo.user}/Buckets/${current.id}`), newBucket)
 
             const newBuckets = buckets.map((bucket : any) => {
                 if (bucket.id !== current.id) {
@@ -194,21 +171,12 @@ const BucketsPage = () => {
                 }
             })
 
-
-
-
-            console.log(newBuckets)
+            // update the ram
             setBuckets(newBuckets)
             setCurrent(newBucket)
-            try {
-                server.post('/buckets/edit', {
-                    ...newBucket
-                })
-            } catch (err) {
-                console.log(err)
-            }
         }
 
+        // set the view mode to default
         setModal({ status: 'none' })
     }
 
@@ -232,7 +200,7 @@ const BucketsPage = () => {
 
     if (loading) {
         return <p>loading...</p>
-    } else if (modal.status === 'add') {
+    } else if (modal.status === MODAL_STATUS.add) {
         return (
             <div className={styles['content']}>
                 <h2>Add Bucket</h2>
@@ -253,7 +221,7 @@ const BucketsPage = () => {
                 </form>
             </div>
         )
-    } else if (modal.status === 'edit') {
+    } else if (modal.status === MODAL_STATUS.edit) {
         return (
             <div className={styles['content']}>
                 <h2>Edit Bucket</h2>
@@ -285,7 +253,7 @@ const BucketsPage = () => {
     } 
 
     return (
-        <div   className={styles['container']}>
+        <div className={styles['container']}>
             <div className ={styles['content']}>
                 <h2>BUCKETS</h2>
                 <h1>&#8369;{current.value}</h1>

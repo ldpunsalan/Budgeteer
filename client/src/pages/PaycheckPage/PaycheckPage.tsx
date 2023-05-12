@@ -1,13 +1,10 @@
-import { useEffect, useState } from 'react'
-
-import server from '../../utils/server'
-import styles from '../Pages.module.css'
-
+import { useEffect, useState, useContext } from 'react'
+import { set, ref, get, remove} from "firebase/database"
 
 import { db } from '../../utils/firebase'
-import { set, ref, update, onValue, get, remove} from "firebase/database"
 import { SessionContext } from '../../contexts/SessionContext'
-import { useContext } from 'react'
+
+import styles from '../Pages.module.css'
 
 /**
  * A component for rendering the paycheck page.
@@ -22,32 +19,30 @@ const PaycheckPage = () => {
 
     useEffect(() => {
         const userID = sessionInfo.user as any
+
         const fetchPaychecks = async () => {
-            get(ref(db)).then((snapshot)=>{
-                const data = snapshot.val()
-                if (!data[userID].Paychecks)
-                {   
-                    setCurrent({"id": 0, "value": 0})
-                    setPaychecks([{"id": 0, "value": 0}])
-                    set(ref(db,`/${sessionInfo.user}/Paychecks/${0}`), {
-                        id: 0,
-                        value: 0,
-                    })
-                    setLoading(false)
+            const snapshot = await get(ref(db))
+            const data = snapshot.val()
+            
+            if (!data[userID].Paychecks) {
+                const emptyPaycheck = {
+                    id: 0,
+                    value: 0
                 }
-                else{
-                    setCurrent(data[userID].Paychecks)
-                    let arr = Object.entries(data[userID].Paychecks)
-                    // console.log("arr : ", arr)
-                    setCurrent(arr[arr.length-1][1])
-                    let paycheckList : any[] = [] // populate this
-                    paycheckList = arr.map((cur) => cur[1])
-                
-                    setPaychecks(paycheckList)
-                    setLoading(false)
-                }
-            })
+                setCurrent({ ...emptyPaycheck })
+                setPaychecks([{ ...emptyPaycheck }])
+                set(ref(db,`/${sessionInfo.user}/Paychecks/${0}`), emptyPaycheck)
+            } else {
+                setCurrent(data[userID].Paychecks)
+                const arr = Object.entries(data[userID].Paychecks)
+                setCurrent(arr[arr.length-1][1])
+                let paycheckList : any[] = [] 
+                paycheckList = arr.map((cur) => cur[1])
+                setPaychecks(paycheckList)
+            }
+            setLoading(false)
         }
+
         fetchPaychecks()
     }, [])
 
@@ -57,57 +52,30 @@ const PaycheckPage = () => {
             const newValue = e.target.paycheckAmount.value
             if (current.value == newValue) {
                 alert("No paycheck changes were made (Same Values)")
-            }
-            else {
-                // console.log("UPDATE VALUE TO : " + newValue)
+            } else {
                 const newPaycheck = {
                     id: current.id + 1,
                     value: newValue
                 }
-                const A = newPaycheck.id
-                const B = newPaycheck.value
 
-                set(ref(db,`/${sessionInfo.user}/Paychecks/${A}`), {
-                    id: A,
-                    value: B,
-                })
+                set(ref(db, `/${sessionInfo.user}/Paychecks/${newPaycheck.id}`), newPaycheck)
                 setPaychecks((prev: any) => [...prev, newPaycheck])
                 setCurrent(newPaycheck)
-                // e.target.reset()
             }
-        }
-        else {
-            // console.log("UNDO")
-            // console.log("Current : ", current)
-            // console.log("Current : ", paychecks)
-            // console.log("paychecks before: ", paychecks)
+        } else {
             if (paychecks.length > 1) {
                 const newPaychecks = paychecks.filter((paycheck : any) => paycheck.id !== current.id)
-                remove(ref(db,`/${sessionInfo.user}/Paychecks/${current.id}`))
+                remove(ref(db, `/${sessionInfo.user}/Paychecks/${current.id}`))
                 setPaychecks(newPaychecks)
-                // console.log(newPaychecks)
                 setCurrent(newPaychecks[newPaychecks.length-1])
-                // console.log("paychecks after: ", paychecks)
             }
-
-            // alert(current.value)
-            // try {
-            //     server.post('/paycheck/undo', {})
-            // } catch (err) {
-            //     console.log(err)
-            // }
-            // console.log(paycheck)
-            // paycheck.pop()
-            // setCurrent(paycheck[paycheck.length-1])
-            // console.log(paycheck)
         }
-        // console.log("Data : ", paycheck, "\nLength : ", paycheck.length)
+        e.target.reset()
     }
 
     if (loading) {
         return <div>Loading...</div>
-    }
-    else {
+    } else {
         return (
             <div className={styles['container']}>
                 <div className={styles['content']}>
@@ -124,8 +92,16 @@ const PaycheckPage = () => {
                             placeholder='How much is your overall budget?'
                             required/>
                         </label>
-                        <input onClick={() => setUpdate(true)} name='updateButton' type='submit' value='Update Paycheck' className={styles['button']}></input>
-                        <input onClick={() => setUpdate(false)}name='undoButton' type='submit' value='Undo' formNoValidate className={styles['button']}></input>
+                        <input 
+                            onClick={() => setUpdate(true)} 
+                            name='updateButton' 
+                            type='submit' 
+                            value='Update Paycheck' 
+                            className={styles['button']}></input>
+                        <button 
+                            onClick={() => setUpdate(false)}
+                            formNoValidate 
+                            className={styles['button']}>Undo</button>
                     </form>
                 </div>
             </div>
