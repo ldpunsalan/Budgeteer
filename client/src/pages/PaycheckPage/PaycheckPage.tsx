@@ -5,47 +5,28 @@ import { db } from '../../utils/firebase'
 import { SessionContext } from '../../contexts/SessionContext'
 
 import styles from '../Pages.module.css'
+import useBuckets from '../../hooks/useBuckets'
+import { Bucket, Paycheck, Snapshot } from '../../types'
 
 /**
  * A component for rendering the paycheck page.
  * @function PaycheckPage
 */
 const PaycheckPage = () => {
-    const [loadingState, setLoadingState] = useState({
-        buckets: true,
-        paychecks: true
-    })
-    const [current, setCurrent] = useState<any>(0)
-    const [paychecks, setPaychecks] = useState<any>([])
-    const [buckets, setBuckets] = useState<any>([])
     const sessionInfo = useContext(SessionContext)
-    const userID = sessionInfo.user as any
+    const userID = sessionInfo.user
 
-    // obtain the user buckets
-    useEffect(() => {
-        const fetchBaskets = async () => {
-            const snapshot = await get(ref(db))
-            const data = snapshot.val()
+    const [loadingPaychecks, setLoadingP] = useState<Boolean>(true)
+    const [paychecks, setPaychecks] = useState<Paycheck[]>([])
+    const [current, setCurrent] = useState<number>(0)
 
-            if (!data[userID].Buckets) {
-                setBuckets([])
-            } else {
-                const userBuckets = Object.entries(data[userID].Buckets)
-                const bucketList = userBuckets.map((cur) => cur[1])
-                setBuckets(bucketList)
-            }
-            setLoadingState(prev => ({
-                ...prev,
-                buckets: false
-            }))
-        }
-
-        fetchBaskets()
-    }, [])
+    const bucketsData = useBuckets(sessionInfo.user)
+    const { loading: loadingBuckets } = bucketsData.loading
+    const { buckets, setBuckets } = bucketsData.buckets
 
     // compute the current paycheck using the bucket info
     useEffect(() => {
-        const totalMoney = buckets.reduce((total: any, bucket: any) => total + parseInt(bucket.value), 0)
+        const totalMoney = buckets.reduce((total: number, bucket) => total + bucket.value, 0)
         setCurrent(totalMoney)
     }, [buckets])
 
@@ -53,18 +34,15 @@ const PaycheckPage = () => {
     useEffect(() => {
         const fetchPaychecks = async () => {
             const snapshot = await get(ref(db))
-            const data = snapshot.val()
+            const data: Snapshot = snapshot.val()
             
             if (data[userID].Paychecks) {
                 const arr = Object.entries(data[userID].Paychecks)
-                let paycheckList : any[] = [] 
+                let paycheckList : Paycheck[] = [] 
                 paycheckList = arr.map((cur) => cur[1])
                 setPaychecks(paycheckList)
             }
-            setLoadingState(prev => ({
-                ...prev,
-                paychecks: false
-            }))
+            setLoadingP(false)
         }
 
         fetchPaychecks()
@@ -75,15 +53,15 @@ const PaycheckPage = () => {
 
         // get the latest paycheck id
         const snapshot = await get(ref(db))
-        const data = snapshot.val()
+        const data: Snapshot = snapshot.val()
         let id = 0
 
         if (data[userID].PaycheckSeq) {
-            id = parseInt(data[userID].PaycheckSeq) + 1
+            id = data[userID].PaycheckSeq + 1
         }
 
         // update the database
-        set(ref(db, `/${userID}/PaycheckSeq`), id.toString())
+        set(ref(db, `/${userID}/PaycheckSeq`), id)
 
         const curPaycheck: any = {
             id: id,
@@ -93,15 +71,16 @@ const PaycheckPage = () => {
         // check the changes in each bucket
         const amt = parseInt(e.target.paycheckAmount.value)
         let currentNew = amt
-        const totalWeight = buckets.reduce((total: any, bucket: any) => total + parseInt(bucket.weight), 0)
-        const newBuckets: any[] = []
-        buckets.forEach((bucket: any, index: any) => {
+        const totalWeight = buckets.reduce((total: number, bucket) => total + bucket.weight, 0)
+        const newBuckets: Bucket[] = []
+        buckets.forEach((bucket, index) => {
             // let the last bucket get the remaining
             let delta = 0;
+
             if (index === buckets.length - 1) {
                 delta = currentNew
             } else {
-                const partialValue = amt * parseInt(bucket.weight) / totalWeight
+                const partialValue = amt * bucket.weight / totalWeight
                 delta = partialValue
                 currentNew -= partialValue
             }
@@ -114,9 +93,9 @@ const PaycheckPage = () => {
             // update the bucket
             const newBucket = {
                 ...bucket,
-                value: parseInt(bucket.value) + delta
+                value: bucket.value + delta
             }
-            console.log(newBucket)
+
             set(ref(db, `/${userID}/Buckets/${bucket.id}`), newBucket)
             newBuckets.push(newBucket)
         })
@@ -136,22 +115,22 @@ const PaycheckPage = () => {
     }
 
     const handleUndo = () => {
-        if (paychecks.length > 0) {
-            const lastPaycheck = paychecks.pop()
+        const lastPaycheck = paychecks.pop()
+        if (lastPaycheck) {
 
             // update the database
             remove(ref(db, `/${userID}/Paychecks/${lastPaycheck.id}`))
             setPaychecks([...paychecks])
 
             // update the buckets
-            const newBuckets: any[] = []
-            lastPaycheck.changes.forEach((paycheck: any) => {
-                const delta = parseInt(paycheck.delta)
+            const newBuckets: Bucket[] = []
+            lastPaycheck.changes.forEach((paycheck) => {
+                const delta = paycheck.delta
                 const bucket = buckets.filter((b: any) => b.id == paycheck.id)[0]
 
                 const newBucket = {
                     ...bucket,
-                    value: parseInt(bucket.value) - delta
+                    value: bucket.value - delta
                 }
                 set(ref(db, `/${userID}/Buckets/${bucket.id}`), newBucket)
                 newBuckets.push(newBucket)
@@ -161,7 +140,7 @@ const PaycheckPage = () => {
         }
     }
 
-    if (loadingState.buckets || loadingState.paychecks) {
+    if (loadingBuckets || loadingPaychecks) {
         return <div>Loading...</div>
     } else {
         return (

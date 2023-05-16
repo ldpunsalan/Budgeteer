@@ -2,7 +2,9 @@ import { useEffect, useState, useContext } from 'react'
 import { set, ref, update, get, remove} from "firebase/database"
 
 import { db } from '../../utils/firebase'
+import { Bucket } from '../../types'
 import { SessionContext } from '../../contexts/SessionContext'
+import useBuckets from '../../hooks/useBuckets'
 
 import styles from '../Pages.module.css'
 
@@ -24,59 +26,17 @@ const MODAL_STATUS = {
 */
 const BucketsPage = () => {
     /**
-     * Loading State
-     *  Type: Boolean
-     * This is true while the client side is obtaining the bucket list
-     */
-    const [loading, setLoading] = useState(true)
-    /**
      * Modal State
      *  Possible Values: 'none' | 'add' | 'edit'
      * States which interface to show. None refers to the general uneditable view
      */
     const [modal, setModal] = useState({ status: MODAL_STATUS.none })
-    /**
-     * Current Bucket
-     *  Type: Bucket
-     * Contains a COPY of the currently viewed bucket. Serves as a reference for 
-     * the details shown.
-     */
-    const [current, setCurrent] = useState<any>({})
-    /**
-     * Bucket List
-     * Type: List<Bucket>
-     * Contains an UPDATED copy of the user's buckets
-     */
-    const [buckets, setBuckets] = useState<any>([])
     const sessionInfo = useContext(SessionContext)
+    const bucketData = useBuckets(sessionInfo.user)
+    const { loading, setLoading } = bucketData.loading
+    const { current, setCurrent } = bucketData.current
+    const { buckets, setBuckets } = bucketData.buckets
 
-    /**
-     * Initially, the state is set to the list of buckets for
-     * the user
-     */
-    useEffect(() => {
-        const userID = sessionInfo.user as any
-
-        const fetchBuckets = async () => {
-            const snapshot = await get(ref(db))
-            const data = snapshot.val()
-
-            if (!data[userID].Buckets) {   
-                setCurrent(null)
-                setBuckets([])
-            } else {
-                setCurrent(data[userID].Buckets)
-                const userBuckets = Object.entries(data[userID].Buckets)
-                setCurrent(userBuckets[0][1])
-                let bucketList : any[] = [] 
-                bucketList = userBuckets.map((cur) => cur[1])
-                setBuckets(bucketList)
-            }
-            setLoading(false)
-        }
-
-        fetchBuckets()
-    }, [])
 
     const addBucket = () => {
         setModal({ status: MODAL_STATUS.add })
@@ -89,7 +49,7 @@ const BucketsPage = () => {
     const resetAll = () => {
         // sets the bucket's value to 0
         const resetBucket = async (id : string) => {
-            setBuckets((prev : any) => prev.map((bucket : any) => {
+            setBuckets((prev : Bucket[]) => prev.map((bucket : any) => {
                 if (bucket.id == id) {
                     return {
                         ...bucket,
@@ -116,8 +76,8 @@ const BucketsPage = () => {
     const handleNewBucket = (e: any) => {
         e.preventDefault()
         const name = e.target.name.value
-        const weight = e.target.weight.value
-        const value = e.target.value.value
+        const weight = parseInt(e.target.weight.value)
+        const value = parseInt(e.target.value.value)
     
         const exist = buckets.filter((bucket: any) => bucket.name === name)
         
@@ -125,11 +85,12 @@ const BucketsPage = () => {
             alert('Bucket already exists')
         } else {
             // create the new bucket
-            const newBucket = {
-                id: Math.floor(Math.random() * 1000),
+            const newBucket: Bucket = {
+                id: Math.floor(Math.random() * 1000).toString(),
                 name,
                 weight,
-                value
+                value,
+                Purchases: {}
             }   
 
             // update the database and ram
@@ -144,20 +105,27 @@ const BucketsPage = () => {
 
     const handleEditBucket = (e: any) => {
         e.preventDefault()
-        const name = e.target.name.value
-        const weight = e.target.weight.value
-        const value = e.target.value.value
 
-        const exist = buckets.filter((bucket: any) => bucket.name === name && bucket.id !== current.id)
+        if (!current) {
+            return alert('Something went wrong')
+        }
+
+        const name = e.target.name.value
+        const weight = parseInt(e.target.weight.value)
+        const value = parseInt(e.target.value.value)
+
+        const exist = buckets.filter((bucket) => bucket.name === name && bucket.id !== current.id)
         
         if (exist.length > 0) {
             alert('Bucket already exists')
         } else {
-            const newBucket = {
+            console.log(current.Purchases)
+            const newBucket: Bucket = {
                 id: current.id,
                 name,
                 weight,
-                value
+                value,
+                Purchases: current.Purchases || {}
             }
             
             // update the database
@@ -181,6 +149,11 @@ const BucketsPage = () => {
     }
 
     const handleDeleteBucket = () => {
+
+        if (!current) {
+            return alert('Something went wrong')
+        }
+
         const newBuckets = buckets.filter((bucket : any) => bucket.id !== current.id)
         remove(ref(db,`/${sessionInfo.user}/Buckets/${current.id}`))
         setBuckets(newBuckets)
@@ -221,6 +194,14 @@ const BucketsPage = () => {
                 </form>
             </div>
         )
+    } else if (!current) {
+        return (
+            <div className={styles['content']}>
+                <h2>Buckets</h2>
+                <h1>You have no buckets</h1>
+                <button onClick={() => addBucket()}>Add Bucket</button>
+            </div>
+        )
     } else if (modal.status === MODAL_STATUS.edit) {
         return (
             <div className={styles['content']}>
@@ -240,14 +221,6 @@ const BucketsPage = () => {
                     </label>
                     <input type="submit" value="Edit Bucket" />
                 </form>
-            </div>
-        )
-    } else if (!current) {
-        return (
-            <div className={styles['content']}>
-                <h2>Buckets</h2>
-                <h1>You have no buckets</h1>
-                <button onClick={() => addBucket()}>Add Bucket</button>
             </div>
         )
     } 

@@ -1,45 +1,28 @@
-import { useEffect, useState, useContext } from 'react'
-import { ref, update, get } from "firebase/database"
+import { useState, useContext } from 'react'
+import { ref, update } from "firebase/database"
 
 import styles from '../Pages.module.css'
 
 import { db } from '../../utils/firebase'
 import { SessionContext } from '../../contexts/SessionContext'
+import useBuckets from '../../hooks/useBuckets'
+import { Bucket } from '../../types'
 
 /**
  * A component for rendering the fund transfer page.
  * @function TransferPage
 */
 const TransferPage = () => {
-    const [loading, setLoading] = useState(true)
-    const [source, setSource] = useState<any>()
-    const [recipient, setRecipient] = useState<any>()
-    const [buckets, setBuckets] = useState<any>([])
-    const [amount, setAmount] = useState<any>()
     const sessionInfo = useContext(SessionContext)
+    const userID = sessionInfo.user
 
-    useEffect(() => {
-        const userID = sessionInfo.user as any
+    const [source, setSource] = useState<string>()
+    const [recipient, setRecipient] = useState<string>()
+    const [amount, setAmount] = useState<number|null>()
 
-        const fetchBuckets = async () => {
-            const snapshot = await get(ref(db))
-            const data = snapshot.val()
-
-            if (!data[userID].Buckets) {   
-                setBuckets([])
-                setLoading(false)
-            } else {
-                const arr = Object.entries(data[userID].Buckets)
-                let bucketList : any[] = [] 
-                bucketList = arr.map((cur) => cur[1])
-                setBuckets(bucketList)
-                setLoading(false)
-            }
-            
-        }
-
-        fetchBuckets()
-    }, [])
+    const bucketsData = useBuckets(userID)
+    const { loading } = bucketsData.loading
+    const { buckets, setBuckets } = bucketsData.buckets
 
     const handleChangeSource = (e: React.ChangeEvent<HTMLSelectElement>) => {
         e.preventDefault()
@@ -53,13 +36,13 @@ const TransferPage = () => {
         setRecipient(recipient)
     }
 
-    const handleChangeAmount = (e:any) => {
+    const handleChangeAmount = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault()
-        const amount = e.target.value
+        const amount = parseInt(e.target.value)
         setAmount(amount)
     }
 
-    const handleTransferFunds = (e: any) => {
+    const handleTransferFunds = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault()
 
         if (source === undefined) {
@@ -76,23 +59,22 @@ const TransferPage = () => {
         // Handle errors
         if (srcBucket.id === recBucket.id) {
             return alert('ERROR: Source and recipient buckets cannot be the same.')
-        }
-        else if (parseInt(srcValue) < parseInt(amount)) {
-            return alert("ERROR: Amount cannot be greater than source bucket's value.")
-        }
-        else if (isNaN(amount)) {
+        } else if (amount != 0 && !amount) {
             return alert("ERROR: Please enter a valid amount.")
+        } else if (srcValue < amount) {
+            return alert("ERROR: Amount cannot be greater than source bucket's value.")
         }
 
         if (confirm('Do you want to proceed?')) {
-            const newSrc = {
+
+            const newSrc: Bucket = {
                 ...srcBucket,
-                value: parseInt(srcValue) - parseInt(amount)
+                value: srcValue - amount
             }
 
-            const newRec = {
+            const newRec: Bucket = {
                 ...recBucket, 
-                value: parseInt(recValue) + parseInt(amount)
+                value: recValue + amount
             }
             
             // update the database
@@ -100,7 +82,7 @@ const TransferPage = () => {
             update(ref(db,`/${sessionInfo.user}/Buckets/${recipient}`), newRec)
 
             // update the ram
-            setBuckets((prev:any) => prev.map((bucket : any) => {
+            setBuckets((prev) => prev.map((bucket) => {
                 if (bucket.id == srcBucket.id) {
                     return newSrc
                 } else if (bucket.id == recBucket.id) {
