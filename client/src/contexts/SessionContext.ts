@@ -3,7 +3,7 @@ import { createContext } from 'react'
 export interface SessionType {
     loading: Boolean,
     loggedIn: Boolean,
-    user: String
+    user: string
 }
 
 export interface SessionVerbType {
