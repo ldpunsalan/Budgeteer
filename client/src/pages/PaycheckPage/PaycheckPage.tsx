@@ -94,6 +94,7 @@ const PaycheckPage = () => {
         const amt = parseInt(e.target.paycheckAmount.value)
         let currentNew = amt
         const totalWeight = buckets.reduce((total: any, bucket: any) => total + parseInt(bucket.weight), 0)
+        const newBuckets: any[] = []
         buckets.forEach((bucket: any, index: any) => {
             // let the last bucket get the remaining
             let delta = 0;
@@ -115,8 +116,11 @@ const PaycheckPage = () => {
                 ...bucket,
                 value: parseInt(bucket.value) + delta
             }
+            console.log(newBucket)
             set(ref(db, `/${userID}/Buckets/${bucket.id}`), newBucket)
+            newBuckets.push(newBucket)
         })
+        setBuckets(newBuckets)
 
         // update the database
         // do not update the paycheck in the database anymore
@@ -129,6 +133,32 @@ const PaycheckPage = () => {
         setCurrent((prev: any) => prev + amt)
 
         e.target.reset()
+    }
+
+    const handleUndo = () => {
+        if (paychecks.length > 0) {
+            const lastPaycheck = paychecks.pop()
+
+            // update the database
+            remove(ref(db, `/${userID}/Paychecks/${lastPaycheck.id}`))
+            setPaychecks([...paychecks])
+
+            // update the buckets
+            const newBuckets: any[] = []
+            lastPaycheck.changes.forEach((paycheck: any) => {
+                const delta = parseInt(paycheck.delta)
+                const bucket = buckets.filter((b: any) => b.id == paycheck.id)[0]
+
+                const newBucket = {
+                    ...bucket,
+                    value: parseInt(bucket.value) - delta
+                }
+                set(ref(db, `/${userID}/Buckets/${bucket.id}`), newBucket)
+                newBuckets.push(newBucket)
+            })
+
+            setBuckets(newBuckets)
+        }
     }
 
     if (loadingState.buckets || loadingState.paychecks) {
@@ -155,10 +185,11 @@ const PaycheckPage = () => {
                             type='submit' 
                             value='Insert Paycheck' 
                             className={styles['button']}></input>
-                        <button 
-                            formNoValidate 
-                            className={styles['button']}>Undo</button>
                     </form>
+                    <button 
+                        onClick={() => handleUndo()}
+                        formNoValidate 
+                        className={styles['button']}>Undo</button>
                 </div>
             </div>
         )
