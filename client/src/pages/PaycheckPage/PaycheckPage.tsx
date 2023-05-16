@@ -11,36 +11,60 @@ import styles from '../Pages.module.css'
  * @function PaycheckPage
 */
 const PaycheckPage = () => {
-    const [loading, setLoading] = useState(true)
-    const [isUpdate, setUpdate] = useState<any>([])
-    const [current, setCurrent] = useState<any>({})
+    const [loadingState, setLoadingState] = useState({
+        buckets: true,
+        paychecks: true
+    })
+    const [current, setCurrent] = useState<any>(0)
     const [paychecks, setPaychecks] = useState<any>([])
+    const [buckets, setBuckets] = useState<any>([])
     const sessionInfo = useContext(SessionContext)
+    const userID = sessionInfo.user as any
 
+    // obtain the user buckets
     useEffect(() => {
-        const userID = sessionInfo.user as any
+        const fetchBaskets = async () => {
+            const snapshot = await get(ref(db))
+            const data = snapshot.val()
 
+            if (!data[userID].Buckets) {
+                setBuckets([])
+            } else {
+                const userBuckets = Object.entries(data[userID].Buckets)
+                const bucketList = userBuckets.map((cur) => cur[1])
+                setBuckets(bucketList)
+            }
+            setLoadingState(prev => ({
+                ...prev,
+                buckets: false
+            }))
+        }
+
+        fetchBaskets()
+    }, [])
+
+    // compute the current paycheck using the bucket info
+    useEffect(() => {
+        const totalMoney = buckets.reduce((total: any, bucket: any) => total + parseInt(bucket.value), 0)
+        setCurrent(totalMoney)
+    }, [buckets])
+
+    // get the paychecks from the database, to be used for undo
+    useEffect(() => {
         const fetchPaychecks = async () => {
             const snapshot = await get(ref(db))
             const data = snapshot.val()
             
-            if (!data[userID].Paychecks) {
-                const emptyPaycheck = {
-                    id: 0,
-                    value: 0
-                }
-                setCurrent({ ...emptyPaycheck })
-                setPaychecks([{ ...emptyPaycheck }])
-                set(ref(db,`/${sessionInfo.user}/Paychecks/${0}`), emptyPaycheck)
-            } else {
-                setCurrent(data[userID].Paychecks)
+            if (data[userID].Paychecks) {
                 const arr = Object.entries(data[userID].Paychecks)
-                setCurrent(arr[arr.length-1][1])
                 let paycheckList : any[] = [] 
                 paycheckList = arr.map((cur) => cur[1])
                 setPaychecks(paycheckList)
             }
-            setLoading(false)
+            setLoadingState(prev => ({
+                ...prev,
+                paychecks: false
+            }))
         }
 
         fetchPaychecks()
@@ -48,32 +72,66 @@ const PaycheckPage = () => {
 
     const handleSubmit = async (e: any) => {
         e.preventDefault()
-        if (isUpdate) {
-            const newValue = e.target.paycheckAmount.value
-            if (current.value == newValue) {
-                alert("No paycheck changes were made (Same Values)")
-            } else {
-                const newPaycheck = {
-                    id: current.id + 1,
-                    value: newValue
-                }
 
-                set(ref(db, `/${sessionInfo.user}/Paychecks/${newPaycheck.id}`), newPaycheck)
-                setPaychecks((prev: any) => [...prev, newPaycheck])
-                setCurrent(newPaycheck)
-            }
-        } else {
-            if (paychecks.length > 1) {
-                const newPaychecks = paychecks.filter((paycheck : any) => paycheck.id !== current.id)
-                remove(ref(db, `/${sessionInfo.user}/Paychecks/${current.id}`))
-                setPaychecks(newPaychecks)
-                setCurrent(newPaychecks[newPaychecks.length-1])
-            }
+        // get the latest paycheck id
+        const snapshot = await get(ref(db))
+        const data = snapshot.val()
+        let id = 0
+
+        if (data[userID].PaycheckSeq) {
+            id = parseInt(data[userID].PaycheckSeq) + 1
         }
+
+        // update the database
+        set(ref(db, `/${userID}/PaycheckSeq`), id.toString())
+
+        const curPaycheck: any = {
+            id: id,
+            changes: []
+        }
+
+        // check the changes in each bucket
+        const amt = parseInt(e.target.paycheckAmount.value)
+        let currentNew = amt
+        const totalWeight = buckets.reduce((total: any, bucket: any) => total + parseInt(bucket.weight), 0)
+        buckets.forEach((bucket: any, index: any) => {
+            // let the last bucket get the remaining
+            let delta = 0;
+            if (index === buckets.length - 1) {
+                delta = currentNew
+            } else {
+                const partialValue = amt * parseInt(bucket.weight) / totalWeight
+                delta = partialValue
+                currentNew -= partialValue
+            }
+
+            curPaycheck.changes.push({
+                id: bucket.id,
+                delta
+            })
+
+            // update the bucket
+            const newBucket = {
+                ...bucket,
+                value: parseInt(bucket.value) + delta
+            }
+            set(ref(db, `/${userID}/Buckets/${bucket.id}`), newBucket)
+        })
+
+        // update the database
+        // do not update the paycheck in the database anymore
+        // since it is implied from the buckets. But, the
+        // paychecks should be saved to enable undo
+        set(ref(db, `/${userID}/Paychecks/${id}`), curPaycheck)
+        setPaychecks((prev: any) => [...prev, curPaycheck])
+
+        // update the shown paycheck amount
+        setCurrent((prev: any) => prev + amt)
+
         e.target.reset()
     }
 
-    if (loading) {
+    if (loadingState.buckets || loadingState.paychecks) {
         return <div>Loading...</div>
     } else {
         return (
@@ -82,24 +140,22 @@ const PaycheckPage = () => {
                     <h2>PAYCHECK</h2>
                     <form name='paycheckForm' onSubmit={handleSubmit}>
                         <label>
-                        <h3>Paycheck Amount</h3>
-                        <h1>&#8369;{current.value}</h1>
+                        <h3>Total Amount</h3>
+                        <h1>&#8369;{current}</h1>
                         <input 
                             name="paycheckAmount"
                             className="paycheckPageInputs"
                             type="number"
                             min="1"
-                            placeholder='How much is your overall budget?'
+                            placeholder='How much did you earn budget?'
                             required/>
                         </label>
                         <input 
-                            onClick={() => setUpdate(true)} 
                             name='updateButton' 
                             type='submit' 
-                            value='Update Paycheck' 
+                            value='Insert Paycheck' 
                             className={styles['button']}></input>
                         <button 
-                            onClick={() => setUpdate(false)}
                             formNoValidate 
                             className={styles['button']}>Undo</button>
                     </form>
