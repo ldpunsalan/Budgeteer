@@ -51,8 +51,8 @@ const TransferPage = () => {
             return alert('Please choose a recipient bucket')
         }
 
-        const srcBucket = buckets.filter((bucket : any) => bucket.id == source)[0]
-        const recBucket = buckets.filter((bucket : any) => bucket.id == recipient)[0]
+        const srcBucket = buckets.filter((bucket) => bucket.id == source)[0]
+        const recBucket = buckets.filter((bucket) => bucket.id == recipient)[0]
         const srcValue = srcBucket.value
         const recValue = recBucket.value
 
@@ -105,7 +105,7 @@ const TransferPage = () => {
                     <select name="sourceBucketName" className="transferPageInputs" required onChange={handleChangeSource}>
                         <option value="" disabled selected>Select a source bucket</option>
                     {
-                        buckets.map((bucket : any) => {
+                        buckets.map((bucket) => {
                             return <option value={bucket.id} id={bucket.id}>{bucket.name}</option>
                         })
                     }     
@@ -114,7 +114,7 @@ const TransferPage = () => {
                     <select name="recipientBucketName" className="transferPageInputs" required onChange={handleChangeRecipient}>
                     <option value="" disabled selected>Select a recipient bucket</option>
                     {
-                        buckets.map((bucket : any) => {
+                        buckets.map((bucket) => {
                             return <option value={bucket.id} id={bucket.id}>{bucket.name}</option>
                         })
                     }

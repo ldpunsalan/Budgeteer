@@ -69,7 +69,7 @@ const PaycheckPage = () => {
         }
 
         // check the changes in each bucket
-        const amt = parseInt(e.target.paycheckAmount.value)
+        const amt = parseInt(e.target.paycheckAmount.value as string)
         let currentNew = amt
         const totalWeight = buckets.reduce((total: number, bucket) => total + bucket.weight, 0)
         const newBuckets: Bucket[] = []
@@ -126,7 +126,7 @@ const PaycheckPage = () => {
             const newBuckets: Bucket[] = []
             lastPaycheck.changes.forEach((paycheck) => {
                 const delta = paycheck.delta
-                const bucket = buckets.filter((b: any) => b.id == paycheck.id)[0]
+                const bucket = buckets.filter((b) => b.id == paycheck.id)[0]
 
                 const newBucket = {
                     ...bucket,

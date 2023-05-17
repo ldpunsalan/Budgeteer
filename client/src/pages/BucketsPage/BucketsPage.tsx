@@ -49,7 +49,7 @@ const BucketsPage = () => {
     const resetAll = () => {
         // sets the bucket's value to 0
         const resetBucket = async (id : string) => {
-            setBuckets((prev : Bucket[]) => prev.map((bucket : any) => {
+            setBuckets((prev : Bucket[]) => prev.map((bucket) => {
                 if (bucket.id == id) {
                     return {
                         ...bucket,
@@ -62,7 +62,7 @@ const BucketsPage = () => {
         }
 
         // reset each bucket in the database and ram
-        buckets.forEach((bucket : any) => {
+        buckets.forEach((bucket) => {
             update(ref(db,`/${sessionInfo.user}/Buckets/${bucket.id}`),{
                 value: 0
             })
@@ -70,16 +70,21 @@ const BucketsPage = () => {
         });
 
         // update the currently showing bucket
-        setCurrent((prev : any) => ({ ...prev, value: 0 }))
+        if (current != null && current != undefined) {
+            setCurrent({ 
+                ...current, 
+                value: 0 
+            })
+        }
     }
 
     const handleNewBucket = (e: any) => {
         e.preventDefault()
-        const name = e.target.name.value
-        const weight = parseInt(e.target.weight.value)
-        const value = parseInt(e.target.value.value)
+        const name = e.target.name.value as string
+        const weight = parseInt(e.target.weight.value as string)
+        const value = parseInt(e.target.value.value as string)
     
-        const exist = buckets.filter((bucket: any) => bucket.name === name)
+        const exist = buckets.filter((bucket) => bucket.name === name)
         
         if (exist.length > 0) {
             alert('Bucket already exists')
@@ -95,7 +100,7 @@ const BucketsPage = () => {
 
             // update the database and ram
             set(ref(db, `/${sessionInfo.user}/Buckets/${newBucket.id}`), newBucket)
-            setBuckets((prev: any) => [...prev, newBucket])
+            setBuckets((prev) => [...prev, newBucket])
             setCurrent(newBucket)
         }
 
@@ -110,16 +115,15 @@ const BucketsPage = () => {
             return alert('Something went wrong')
         }
 
-        const name = e.target.name.value
-        const weight = parseInt(e.target.weight.value)
-        const value = parseInt(e.target.value.value)
+        const name = e.target.name.value as string
+        const weight = parseInt(e.target.weight.value as string)
+        const value = parseInt(e.target.value.value as string)
 
         const exist = buckets.filter((bucket) => bucket.name === name && bucket.id !== current.id)
         
         if (exist.length > 0) {
             alert('Bucket already exists')
         } else {
-            console.log(current.Purchases)
             const newBucket: Bucket = {
                 id: current.id,
                 name,
@@ -131,7 +135,7 @@ const BucketsPage = () => {
             // update the database
             update(ref(db, `/${sessionInfo.user}/Buckets/${current.id}`), newBucket)
 
-            const newBuckets = buckets.map((bucket : any) => {
+            const newBuckets = buckets.map((bucket) => {
                 if (bucket.id !== current.id) {
                     return bucket;
                 } else {
@@ -154,7 +158,7 @@ const BucketsPage = () => {
             return alert('Something went wrong')
         }
 
-        const newBuckets = buckets.filter((bucket : any) => bucket.id !== current.id)
+        const newBuckets = buckets.filter((bucket) => bucket.id !== current.id)
         remove(ref(db,`/${sessionInfo.user}/Buckets/${current.id}`))
         setBuckets(newBuckets)
 
@@ -167,7 +171,7 @@ const BucketsPage = () => {
 
     const handleChangeBucket = (e : React.ChangeEvent<HTMLSelectElement>) => {
         const bucketID = e.target.value;
-        const newCurrent = buckets.filter((bucket: any) => bucket.id == bucketID)
+        const newCurrent = buckets.filter((bucket) => bucket.id == bucketID)
         setCurrent(newCurrent[0])
     }
 
@@ -233,7 +237,7 @@ const BucketsPage = () => {
                 <h3>Name= {current.name}<br />Weight= {current.weight}</h3>
                 <select name="bucketName" className="bucketPageInputs" onChange={handleChangeBucket} value={current.id}>
                 {
-                    buckets.map((bucket : any) => {
+                    buckets.map((bucket) => {
                         return <option value={bucket.id} id={bucket.id}>{bucket.name}</option>
                     })
                 }

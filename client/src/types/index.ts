@@ -1,5 +1,5 @@
 export interface Purchase {
-    id: string,
+    id: number,
     name: string,
     value: number,
     bucketid: string,
@@ -12,7 +12,7 @@ export interface Bucket {
     value: number,
     weight: number,
     Purchases: {
-        [id: string]: Purchase
+        [id: number]: Purchase
     }
 }
 

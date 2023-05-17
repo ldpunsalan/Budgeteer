@@ -6,7 +6,7 @@ import { SessionContext } from '../../contexts/SessionContext'
 
 import styles from '../Pages.module.css'
 import useBuckets from '../../hooks/useBuckets'
-import { Purchase, Snapshot } from '../../types'
+import { Bucket, Purchase, Snapshot } from '../../types'
 
 const MODAL_STATUS = {
     none: 'none',
@@ -22,9 +22,9 @@ const PurchasePage = () => {
     const sessionInfo = useContext(SessionContext)
     const userID = sessionInfo.user
 
-    const [purchases, setPurchases] = useState<any>([])
+    const [purchases, setPurchases] = useState<Purchase[]>([])
     const [current, setCurrent] = useState<Purchase>({
-        id: '',
+        id: 0,
         bucketid: '',
         name: '',
         value: 0,
@@ -49,7 +49,7 @@ const PurchasePage = () => {
                     const bucket = data[userID].Buckets[bucketID]
                     if (bucket.Purchases) {
                         Object.keys(bucket.Purchases).forEach((purchaseID) => {
-                            const purchase = bucket.Purchases[purchaseID]
+                            const purchase = bucket.Purchases[parseInt(purchaseID)]
                             purchasesDB.push(purchase)
                         })
                     }
@@ -68,17 +68,17 @@ const PurchasePage = () => {
 
     const handleSubmit = async (e: any) => {
         e.preventDefault()
-        const name = e.target.name.value
-        const value = parseInt(e.target.value.value)
-        const bucketid = e.target.bucketid.value
-        const ddate = e.target.date.value
+        const name = e.target.name.value as string
+        const value = parseInt(e.target.value.value as string)
+        const bucketid = e.target.bucketid.value as string
+        const ddate = e.target.date.value as string
 
-        const relevantBucket = buckets.filter((bucket: any) => bucket.id == bucketid)[0]
+        const relevantBucket = buckets.filter((bucket) => bucket.id == bucketid)[0]
         if (value > relevantBucket.value) {
             return alert('Value cannot exceed the current bucket amount')
         }
 
-        const newPurchase = {
+        const newPurchase: Purchase = {
             id: Math.floor(Math.random() * 1000),
             name,
             value,
@@ -94,17 +94,17 @@ const PurchasePage = () => {
             // assume that the bucket exists
             const bucket = data[userID].Buckets[bucketid]
             const purchases = data[userID].Buckets[bucketid].Purchases || {}
-            const newPurchases = {
+            const newPurchases: { [id: string]: Purchase } = {
                 ...purchases,
                 [newPurchase.id]: newPurchase
             }
-            const newBucket = {
+            const newBucket: Bucket = {
                 ...bucket,
                 value: bucket.value - value,
                 Purchases: newPurchases
             }
             set(ref(db, `/${userID}/Buckets/${bucketid}`), newBucket)
-            setPurchases((prev: any) => [...prev, newPurchase])
+            setPurchases((prev) => [...prev, newPurchase])
             setBuckets(prev => prev.map(bucket => {
                 if (bucket.id == bucketid) {
                     return newBucket
@@ -127,21 +127,21 @@ const PurchasePage = () => {
             return alert('Something went wrong')
         }
 
-        const name = e.target.name.value
-        const value = e.target.value.value
+        const name = e.target.name.value as string
+        const value = parseInt(e.target.value.value as string)
         const bucketid = current.bucketid
-        const ddate = e.target.date.value
+        const ddate = e.target.date.value as string
 
-        const relevantBucket = buckets.filter((bucket: any) => bucket.id == bucketid)[0]
+        const relevantBucket = buckets.filter((bucket) => bucket.id == bucketid)[0]
         const _oldValue = relevantBucket.value + current.value
-        const _newValue = _oldValue - parseInt(value)
+        const _newValue = _oldValue - value
 
         // check if updating the price makes the bucket value go negative
         if (_newValue < 0) {
             return alert('Bucket value cannot go negative')
         }
 
-        const newPurchase = {
+        const newPurchase: Purchase = {
             id: current.id,
             name,
             value,
@@ -151,13 +151,13 @@ const PurchasePage = () => {
 
         // modify the database
         const snapshot = await get(ref(db))
-        const data = snapshot.val()
+        const data: Snapshot = snapshot.val()
         
         try {
             // assume that the bucket exists
             const bucket = data[userID].Buckets[bucketid]
-            const oldValue = parseInt(bucket.value) + current.value
-            const newValue = oldValue - parseInt(value)
+            const oldValue = bucket.value + current.value
+            const newValue = oldValue - value
             const newBucket = {
                 ...bucket,
                 value: newValue,
@@ -174,7 +174,7 @@ const PurchasePage = () => {
                     return bucket
                 }
             }))
-            const newPurchases = purchases.map((purchase: any) => {
+            const newPurchases = purchases.map((purchase) => {
                 if (purchase.id === current.id) {
                     return newPurchase
                 } else {
@@ -190,28 +190,28 @@ const PurchasePage = () => {
         setModal({ status: MODAL_STATUS.none })
     }
 
-     const handleSetEdit = (purchase: any) => {
+     const handleSetEdit = (purchase: Purchase) => {
         setCurrent(purchase)
         setModal({ status: MODAL_STATUS.edit })
      }
 
-     const handleDelete = async (purchase: any) => {
+     const handleDelete = async (purchase: Purchase) => {
         const bucketid = purchase.bucketid
         // remove from database
         const snapshot = await get(ref(db))
-        const data = snapshot.val()
+        const data: Snapshot = snapshot.val()
         
         try {
             const bucket = data[userID].Buckets[bucketid]
             const newPurchases = { ...bucket.Purchases }
             delete newPurchases[purchase.id]
-            const newBucket = {
+            const newBucket: Bucket = {
                 ...bucket,
-                value: parseInt(bucket.value) + parseInt(purchase.value),
+                value: bucket.value + purchase.value,
                 Purchases: newPurchases
             }
             set(ref(db, `/${userID}/Buckets/${bucketid}`), newBucket)
-            setPurchases((prev: any) => prev.filter((p: any) => purchase.id != p.id))
+            setPurchases((prev) => prev.filter((p) => purchase.id != p.id))
             setBuckets(prev => prev.filter(bucket => {
                 if (bucket.id == bucketid) {
                     return newBucket
@@ -301,7 +301,7 @@ const PurchasePage = () => {
                         <select name="bucketid" className="purchasePageInputs" required>
                             <option value="" disabled selected>Choose the relevant bucket</option>
                             {
-                                buckets.map((bucket : any) => {
+                                buckets.map((bucket) => {
                                     return <option value={bucket.id} id={bucket.id}>{bucket.name}</option>
                                 })
                             }
@@ -320,7 +320,7 @@ const PurchasePage = () => {
                 <div>
                     <h3>Purchases</h3>
                 {
-                    purchases.map((purchase: any) => (
+                    purchases.map((purchase) => (
                         <li>
                             {purchase.name}: {purchase.value}
                             <button onClick={() => handleSetEdit(purchase)}>EDIT</button>
