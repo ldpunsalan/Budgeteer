@@ -102,20 +102,30 @@ const TransferPage = () => {
                 <div className={styles['content']}>
                     <h2>TRANSFER FUNDS</h2>
                     <h3>Source Bucket</h3> 
-                    <select name="sourceBucketName" className="transferPageInputs" required onChange={handleChangeSource}>
-                        <option value="" disabled selected>Select a source bucket</option>
+                    <select 
+                        className="transferPageInputs" 
+                        name="sourceBucketName" 
+                        defaultValue="" 
+                        required 
+                        onChange={handleChangeSource}>
+                        <option value="" disabled>Select a source bucket</option>
                     {
                         buckets.map((bucket) => {
-                            return <option value={bucket.id} id={bucket.id}>{bucket.name}</option>
+                            return <option key={bucket.id} value={bucket.id} id={bucket.id}>{bucket.name}</option>
                         })
                     }     
                     </select>
                     <h3>Recipient Bucket</h3>
-                    <select name="recipientBucketName" className="transferPageInputs" required onChange={handleChangeRecipient}>
-                    <option value="" disabled selected>Select a recipient bucket</option>
+                    <select 
+                        className="transferPageInputs" 
+                        name="recipientBucketName"
+                        defaultValue="" 
+                        required 
+                        onChange={handleChangeRecipient}>
+                    <option value="" disabled>Select a recipient bucket</option>
                     {
                         buckets.map((bucket) => {
-                            return <option value={bucket.id} id={bucket.id}>{bucket.name}</option>
+                            return <option key={bucket.id} value={bucket.id} id={bucket.id}>{bucket.name}</option>
                         })
                     }
                     </select>

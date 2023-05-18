@@ -298,11 +298,11 @@ const PurchasePage = () => {
                     </label>
                     <label>
                         <h3>Bucket</h3>
-                        <select name="bucketid" className="purchasePageInputs" required>
-                            <option value="" disabled selected>Choose the relevant bucket</option>
+                        <select name="bucketid" className="purchasePageInputs" required defaultValue="">
+                            <option value="" disabled>Choose the relevant bucket</option>
                             {
                                 buckets.map((bucket) => {
-                                    return <option value={bucket.id} id={bucket.id}>{bucket.name}</option>
+                                    return <option key={bucket.id} value={bucket.id} id={bucket.id}>{bucket.name}</option>
                                 })
                             }
                         </select>
@@ -321,7 +321,7 @@ const PurchasePage = () => {
                     <h3>Purchases</h3>
                 {
                     purchases.map((purchase) => (
-                        <li>
+                        <li key={purchase.id}>
                             {purchase.name}: {purchase.value}
                             <button onClick={() => handleSetEdit(purchase)}>EDIT</button>
                             <button onClick={() => handleDelete(purchase)}>DELETE</button>

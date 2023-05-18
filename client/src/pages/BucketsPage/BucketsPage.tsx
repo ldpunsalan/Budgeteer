@@ -238,7 +238,7 @@ const BucketsPage = () => {
                 <select name="bucketName" className="bucketPageInputs" onChange={handleChangeBucket} value={current.id}>
                 {
                     buckets.map((bucket) => {
-                        return <option value={bucket.id} id={bucket.id}>{bucket.name}</option>
+                        return <option key={bucket.id} value={bucket.id} id={bucket.id}>{bucket.name}</option>
                     })
                 }
                 </select>
