@@ -1,14 +1,13 @@
-import React, { useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 import { useNavigate, Link, Navigate } from 'react-router-dom';
 import validator from 'validator';
 import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { set, ref} from "firebase/database"
 
 import { auth } from '../../utils/firebase'
-import server from '../../utils/server';
 import styles from './SignupForm.module.css'
 import { SessionContext } from '../../contexts/SessionContext';
-import { set, ref} from "firebase/database"
-import {db} from "../../utils/firebase"
+import { db } from "../../utils/firebase"
 
 
 /**
@@ -68,16 +67,16 @@ const SignupForm = () => {
             .catch(error => {
                 switch (error.code) {
                     case 'auth/email-already-in-use':
-                    console.log(`Email address already in use.`);
+                    alert(`Email address already in use.`);
                     break;
                     case 'auth/invalid-email':
-                    console.log(`Email address is invalid.`);
+                    alert(`Email address is invalid.`);
                     break;
                     case 'auth/weak-password':
-                    console.log('Password is not strong enough. Add additional characters including special characters and numbers.');
+                    alert('Password is not strong enough. Add additional characters including special characters and numbers.');
                     break;
                     default:
-                    console.log(error.message);
+                    alert(error.message);
                     break;
                 }
             });
@@ -120,48 +119,50 @@ const SignupForm = () => {
 
     return (
         <div className={styles['app-container']}>
-        <Link to="/" className={styles['header']}>
-            <h1>Budgeteer</h1>
-        </Link>
-        <div className="registerpage">
-            <div className="email">
-                <input 
-                    className="register_input" 
-                    type="email" 
-                    name="email" 
-                    placeholder="Email"
-                    value={email} 
-                    onChange = {(e) => handleInputChange(e)} />
-            </div>
+            <Link to="/" className={styles['header']}>
+                <h1>Budgeteer</h1>
+            </Link>
+            <form onSubmit={handleSubmit} className="registerpage">
+                <div className="email">
+                    <input 
+                        className="register_input" 
+                        type="email" 
+                        name="email" 
+                        placeholder="Email"
+                        value={email} 
+                        onChange = {(e) => handleInputChange(e)} />
+                </div>
 
-            <div className="password">
-                <input 
-                    className="register_input" 
-                    type="password" 
-                    name="password"
-                    placeholder="Password" 
-                    value={password} 
-                    onChange = {(e) => handleInputChange(e)} /> 
-                {errorMessage === '' ? null :
-                <span style={{fontWeight: 'bold', color: '#2684FC'}}> {errorMessage}</span>}
-            </div>
+                <div className="password">
+                    <input 
+                        className="register_input" 
+                        type="password" 
+                        name="password"
+                        placeholder="Password" 
+                        value={password} 
+                        onChange = {(e) => handleInputChange(e)} /> 
+                    {errorMessage === '' ? null :
+                    <span style={{fontWeight: 'bold', color: '#2684FC'}}> {errorMessage}</span>}
+                </div>
 
-            <div className="confirm-password">
-                <input 
-                    className="register_input" 
-                    type="password" 
-                    name="confirmpassword" 
-                    placeholder="Confirm Password"
-                    value={confirmpassword} 
-                    onChange = {(e) => handleInputChange(e)} />
-            </div>
-            {errorMessage2 === '' ? null :
-            <span className={styles['error']}> {errorMessage2}</span>}
-            <br />
-            <button onClick={handleSubmit} className={styles['button']}> Register </button>
-            <p className={styles['text']}>Already have an account? <Link to="/login" className={styles['link']}>Log-In</Link></p>
-
-            </div>
+                <div className="confirm-password">
+                    <input 
+                        className="register_input" 
+                        type="password" 
+                        name="confirmpassword" 
+                        placeholder="Confirm Password"
+                        value={confirmpassword} 
+                        onChange = {(e) => handleInputChange(e)} />
+                </div>
+                {
+                    errorMessage2 === '' 
+                    ? null 
+                    : <span className={styles['error']}> {errorMessage2}</span>
+                }
+                <br />
+                <input type="submit" value="Register" className={styles['button']} />
+                <p className={styles['text']}>Already have an account? <Link to="/login" className={styles['link']}>Log-In</Link></p>
+            </form>
         </div>
     )
 }

@@ -43,7 +43,6 @@ function App() {
           loggedIn: true,
           user: e,
       }})
-      console.log("logged in", e)
     },
     logout: () => {
       // remove from localStorage

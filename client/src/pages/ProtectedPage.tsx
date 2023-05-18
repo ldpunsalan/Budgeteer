@@ -16,7 +16,6 @@ const ProtectedPage = ({ children }: Props) => {
     const sessionInfo = useContext(SessionContext)
 
     if (sessionInfo.loading) {
-        console.log("loading")
         return <div>loading...</div>
     } else if (sessionInfo.loggedIn) {
         return <div>
@@ -24,7 +23,7 @@ const ProtectedPage = ({ children }: Props) => {
             <div>{children}</div>
         </div>
     } else {
-        console.log("cant", sessionInfo)
+        console.warn('Please login first.')
         return <Navigate to="/login" replace={true} />
     }
 }

@@ -26,7 +26,7 @@ const DashboardPage = () => {
             </div>
         )
     } else {
-        console.log("Not logged in", sessionInfo)
+        console.warn('Please login')
         return <Navigate to="/login" replace={true} />  // if removed, fixes the double login when logout button is pressed.
                                                         // why tho? maybe it redirects too fast?
     }

@@ -1,8 +1,7 @@
 import { useContext } from 'react';
 import { NavLink } from 'react-router-dom'
 
-import { SessionContext, SessionVerbs } from '../../contexts/SessionContext';
-import server from '../../utils/server';
+import { SessionVerbs } from '../../contexts/SessionContext';
 import styles from './NavBar.module.css';
 
 /**
@@ -10,7 +9,6 @@ import styles from './NavBar.module.css';
  * @function NavBar
 */
 const NavBar = () => {
-    const sessionInfo = useContext(SessionContext)
     const sessionVerb = useContext(SessionVerbs)
 
     /**
@@ -19,7 +17,6 @@ const NavBar = () => {
      * @async
     */    
     const logoutSession = async () => {
-        await server.get('logout');
         sessionVerb.logout()
     }
 
