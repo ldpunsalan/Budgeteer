@@ -43,18 +43,19 @@ const PurchasePage = () => {
             const data: Snapshot = snapshot.val()
             
             try {
-                // assume that user/buckets exists
-                const purchasesDB: Purchase[] = [];
-                Object.keys(data[userID].Buckets).forEach((bucketID) => {
-                    const bucket = data[userID].Buckets[bucketID]
-                    if (bucket.Purchases) {
-                        Object.keys(bucket.Purchases).forEach((purchaseID) => {
-                            const purchase = bucket.Purchases[parseInt(purchaseID)]
-                            purchasesDB.push(purchase)
-                        })
-                    }
-                })
-                setPurchases(purchasesDB)
+                if (data[userID].Buckets) {
+                    const purchasesDB: Purchase[] = [];
+                    Object.keys(data[userID].Buckets).forEach((bucketID) => {
+                        const bucket = data[userID].Buckets[bucketID]
+                        if (bucket.Purchases) {
+                            Object.keys(bucket.Purchases).forEach((purchaseID) => {
+                                const purchase = bucket.Purchases[parseInt(purchaseID)]
+                                purchasesDB.push(purchase)
+                            })
+                        }
+                    })
+                    setPurchases(purchasesDB)
+                }
             } catch (err) {
                 alert('An error occurred!')
                 console.error(err)
