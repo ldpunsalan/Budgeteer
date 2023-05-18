@@ -20,7 +20,7 @@ const DashboardPage = () => {
                 <div className={styles['container']}>
                     <div className={styles['content']}>
                         <h2>DASHBOARD</h2>
-                        Welcome, user {sessionInfo.user}!
+                        Welcome, {sessionInfo.email}!
                     </div>
                 </div>
             </div>

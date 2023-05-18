@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 
 import { SessionVerbs } from '../../contexts/SessionContext';
 import styles from './NavBar.module.css';
@@ -10,6 +10,7 @@ import styles from './NavBar.module.css';
 */
 const NavBar = () => {
     const sessionVerb = useContext(SessionVerbs)
+    const navigate = useNavigate()
 
     /**
      * Logs the user out of their session.
@@ -18,6 +19,7 @@ const NavBar = () => {
     */    
     const logoutSession = async () => {
         sessionVerb.logout()
+        navigate('/login')
     }
 
     return <div className={styles['navbar']}><nav>

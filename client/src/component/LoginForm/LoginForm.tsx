@@ -22,8 +22,8 @@ const LoginForm = () => {
         signInWithEmailAndPassword(auth, email.value, password.value)
             .then((userCredential) => {
                 const user = userCredential.user;
-                console.log(user)
-                sessionVerb.login(user.uid)
+                // console.log(user)
+                sessionVerb.login(user.uid, user.email || "")
             }).catch(err => {
                 setErrorMessage('Invalid username/password')
                 console.error(err)

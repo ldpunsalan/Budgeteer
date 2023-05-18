@@ -24,24 +24,27 @@ export const defaultSessionInfo : SessionType = {
   loading: true,
   loggedIn: false,
   user: "",
+  email: ""
 } 
 
 export const defaultSessionVerb : SessionVerbType = {
-  login: (e) => {},
+  login: (id, email) => {},
   logout: () => {},
 }
 
 function App() {
   const [sessionInfo, setSessionInfo] = useState<SessionType>(defaultSessionInfo)
   const [sessionVerb, setSessionVerb] = useState<SessionVerbType>({
-    login: (e) => {
+    login: (id, email) => {
       // save on localStorage
-      localStorage.setItem('user', e.toString())
+      localStorage.setItem('user', id.toString())
+      localStorage.setItem('email', email.toString())
       setSessionInfo(prev => {
         return {
           ...prev,
           loggedIn: true,
-          user: e,
+          user: id,
+          email: email
       }})
     },
     logout: () => {
@@ -51,7 +54,8 @@ function App() {
         return {
           ...prev,
           loggedIn: false,
-          user: ""
+          user: "",
+          email: ""
         }
       })
     }
@@ -62,8 +66,12 @@ function App() {
   useEffect(() => {
     const getUserFirebase = () => {
       const user = localStorage.getItem('user')
-      if (user) {
-        sessionVerb.login(user)
+      const email = localStorage.getItem('email')
+      if (user && email) {
+        sessionVerb.login(user, email)
+      } else {
+        localStorage.removeItem('user')
+        localStorage.removeItem('email')
       }
       setSessionInfo(prev => ({
         ...prev,
