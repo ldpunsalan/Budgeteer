@@ -7,7 +7,7 @@ export interface SessionType {
 }
 
 export interface SessionVerbType {
-    login: (e: String) => void,
+    login: (e: string) => void,
     logout: () => void
 }
 
