@@ -11,6 +11,31 @@
     margin: 50px;
 }
 
+.scroll {
+    display:flex;
+    height: 40px; /* Adjust the height as needed */
+    overflow: auto;
+    flex-direction: column;
+    align-content: space-evenly;
+}
+
+.inner-scroll {
+    display: inline-block;
+    flex-wrap: nowrap;
+}
+
+.inner-button {
+    display:flex;
+    justify-content: flex-end;
+}
+
+.header {
+    display: flex;
+    align-content:center;
+    justify-content: center;
+    text-align: center;
+}
+
 .content {
     display: flex;
     align-content:center;

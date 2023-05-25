@@ -232,51 +232,10 @@ const PurchasePage = () => {
         return <div>Loading purchases...</div>
     } else if (modal.status === MODAL_STATUS.edit) {
         return (
-            <div className={styles['content']}>
-            <h2>EDIT PURCHASE</h2>
-            <form onSubmit={handleEditSubmit}>
-                <label>
-                    <h3>Purchase Name</h3>
-                    <input 
-                        name="name"
-                        className="PurchasePageInputs"
-                        type="text"
-                        placeholder='Where did you spend your money?'
-                        defaultValue={current.name}
-                        required/>
-                </label>
-                <label>
-                    <h3>Amount</h3>
-                    <input 
-                        name="value"
-                        className="PurchasePageInputs"
-                        type="number"
-                        min="0"
-                        placeholder='How much did you spend?'
-                        defaultValue={current.value}
-                        required/>
-
-                </label>
-                <label>
-                    <h3>Date</h3>
-                    <input
-                        name="date"
-                        className='purchasePageInputs'
-                        type="date"
-                        defaultValue={current.date}
-                        required/>
-                </label>
-                <input type='submit' value='Edit Purchase' />
-            </form>
-            </div>
-        )
-    } 
-
-    return (
-        <div className={styles['container']}>
-            <div className={styles['content']}>
-                <h2>PURCHASE</h2>
-                <form onSubmit={handleSubmit}>
+            <div className={styles['container']}>
+                <div className={styles['content']}>
+                <div className={styles['header']}><h2>EDIT PURCHASE</h2></div>
+                <form onSubmit={handleEditSubmit}>
                     <label>
                         <h3>Purchase Name</h3>
                         <input 
@@ -284,7 +243,9 @@ const PurchasePage = () => {
                             className="PurchasePageInputs"
                             type="text"
                             placeholder='Where did you spend your money?'
-                            required/>
+                            defaultValue={current.name}
+                            required
+                            style={{width: "250px"}}/>
                     </label>
                     <label>
                         <h3>Amount</h3>
@@ -294,7 +255,55 @@ const PurchasePage = () => {
                             type="number"
                             min="0"
                             placeholder='How much did you spend?'
-                            required/>
+                            defaultValue={current.value}
+                            required
+                            style={{width: "250px"}}/>
+
+                    </label>
+                    <label>
+                        <h3>Date</h3>
+                        <input
+                            name="date"
+                            className='purchasePageInputs'
+                            type="date"
+                            defaultValue={current.date}
+                            required
+                            style={{width: "250px"}}/>
+                    </label>
+                    <br />
+                    <br />
+                    <input type='submit' value='Edit Purchase' className={styles['button']}/>
+                </form>
+                </div>
+            </div>
+        )
+    } 
+
+    return (
+        <div className={styles['container']}>
+            <div className={styles['content']}>
+            <div className={styles['header']}><h2>PURCHASE</h2></ div>
+                <form onSubmit={handleSubmit}>
+                    <label>
+                        <h3>Purchase Name</h3>
+                        <input 
+                            name="name"
+                            className="PurchasePageInputs"
+                            type="text"
+                            placeholder='Where did you spend your money?'
+                            required
+                            style={{width: "250px"}}/>
+                    </label>
+                    <label>
+                        <h3>Amount</h3>
+                        <input 
+                            name="value"
+                            className="PurchasePageInputs"
+                            type="number"
+                            min="0"
+                            placeholder='How much did you spend?'
+                            required
+                            style={{width: "250px"}}/>
 
                     </label>
                     <label>
@@ -314,22 +323,28 @@ const PurchasePage = () => {
                             name="date"
                             className='purchasePageInputs'
                             type="date"
-                            required/>
+                            required
+                            style={{width: "250px"}}/>
                     </label>
                     <input type='submit' value='Create Purchase' className={styles['button']}/>
                 </form>
-                <div>
+                
                     <h3>Purchases</h3>
-                {
-                    purchases.map((purchase) => (
-                        <li key={purchase.id}>
-                            {purchase.name}: {purchase.value}
-                            <button onClick={() => handleSetEdit(purchase)}>EDIT</button>
-                            <button onClick={() => handleDelete(purchase)}>DELETE</button>
-                        </li>
-                    ))
-                }
-                </div>
+                    <div className={styles['scroll']}>    
+                        {
+                            purchases.map((purchase) => (
+                                <div className={styles['inner-scroll']}>
+                                    <li key={purchase.id}>
+                                        {purchase.name}:{purchase.value}
+                                        <div className={styles['inner-button']}>
+                                            <button onClick={() => handleSetEdit(purchase)}>✏️</button>
+                                            <button onClick={() => handleDelete(purchase)}>🗑️</button>
+                                        </div>    
+                                    </li>
+                                </div>
+                            ))
+                        }
+                    </div>
             </div>
         </div>
     )
