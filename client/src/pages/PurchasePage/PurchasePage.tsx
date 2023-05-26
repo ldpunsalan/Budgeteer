@@ -280,71 +280,73 @@ const PurchasePage = () => {
     } 
 
     return (
-        <div className={styles['container']}>
-            <div className={styles['content']}>
-            <div className={styles['header']}><h2>PURCHASE</h2></ div>
-                <form onSubmit={handleSubmit}>
-                    <label>
-                        <h3>Purchase Name</h3>
-                        <input 
-                            name="name"
-                            className="PurchasePageInputs"
-                            type="text"
-                            placeholder='Where did you spend your money?'
-                            required
-                            style={{width: "250px"}}/>
-                    </label>
-                    <label>
-                        <h3>Amount</h3>
-                        <input 
-                            name="value"
-                            className="PurchasePageInputs"
-                            type="number"
-                            min="0"
-                            placeholder='How much did you spend?'
-                            required
-                            style={{width: "250px"}}/>
-
-                    </label>
-                    <label>
-                        <h3>Bucket</h3>
-                        <select name="bucketid" className="purchasePageInputs" required defaultValue="">
-                            <option value="" disabled>Choose the relevant bucket</option>
-                            {
-                                buckets.map((bucket) => {
-                                    return <option key={bucket.id} value={bucket.id} id={bucket.id}>{bucket.name}</option>
-                                })
-                            }
-                        </select>
-                    </label>
-                    <label>
-                        <h3>Date</h3>
-                        <input
-                            name="date"
-                            className='purchasePageInputs'
-                            type="date"
-                            required
-                            style={{width: "250px"}}/>
-                    </label>
-                    <input type='submit' value='Create Purchase' className={styles['button']}/>
-                </form>
-                
-                    <h3>Purchases</h3>
+        <div className={styles['purchase-column']}>
+            <div className={styles['container']}>
+                <div className={styles['content']}>
+                    <div className={styles['header']}><h2>CREATE PURCHASE</h2></div>
+                    <form onSubmit={handleSubmit}>
+                        <label>
+                            <h3>Purchase Name</h3>
+                            <input 
+                                name="name"
+                                className="PurchasePageInputs"
+                                type="text"
+                                placeholder='Where did you spend your money?'
+                                required
+                                style={{width: "250px"}}/>
+                        </label>
+                        <label>
+                            <h3>Amount</h3>
+                            <input 
+                                name="value"
+                                className="PurchasePageInputs"
+                                type="number"
+                                min="0"
+                                placeholder='How much did you spend?'
+                                required
+                                style={{width: "250px"}}/>
+                        </label>
+                        <label>
+                            <h3>Bucket</h3>
+                            <select name="bucketid" className="purchasePageInputs" required defaultValue="">
+                                <option value="" disabled>Choose the relevant bucket</option>
+                                {
+                                    buckets.map((bucket) => {
+                                        return <option key={bucket.id} value={bucket.id} id={bucket.id}>{bucket.name}</option>
+                                    })
+                                }
+                            </select>
+                        </label>
+                        <label>
+                            <h3>Date</h3>
+                            <input
+                                name="date"
+                                className='purchasePageInputs'
+                                type="date"
+                                required
+                                style={{width: "250px"}}/>
+                        </label>
+                        <input type='submit' value='Create Purchase' className={styles['button']}/>
+                    </form>
+                </div>
+            </div>
+            <div className={styles['container']}>
+                <div className={styles['content']}>
+                    <h2>HISTORY</h2>
                     <div className={styles['scroll']}>    
                         {
                             purchases.map((purchase) => (
-                                <div className={styles['inner-scroll']}>
+                                <div>
                                     <li key={purchase.id}>
                                         {purchase.name}:{purchase.value}
-                                        <div className={styles['inner-button']}>
                                             <button onClick={() => handleSetEdit(purchase)}>✏️</button>
                                             <button onClick={() => handleDelete(purchase)}>🗑️</button>
-                                        </div>    
                                     </li>
                                 </div>
                             ))
                         }
                     </div>
+                </div>
             </div>
         </div>
     )

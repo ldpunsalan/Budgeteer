@@ -1,13 +1,20 @@
 .container {
     display: flex;
     height: calc(100vh - 96px);
-    align-content:center;
-    justify-content: center;
+    justify-content: flex-start;
     flex-direction:column;
+
     border:none;
     border-radius:10px;
     background:white;
     box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
+    margin: 50px;
+}
+
+.content {
+    display: flex;
+    justify-content: center;
+    flex-direction:column;
     margin: 50px;
 }
 
@@ -19,14 +26,8 @@
     align-content: space-evenly;
 }
 
-.inner-scroll {
-    display: inline-block;
-    flex-wrap: nowrap;
-}
-
-.inner-button {
-    display:flex;
-    justify-content: flex-end;
+.purchase-column {
+    display: flex;
 }
 
 .header {
@@ -36,13 +37,6 @@
     text-align: center;
 }
 
-.content {
-    display: flex;
-    align-content:center;
-    justify-content: center;
-    flex-direction:column;
-    margin: 50px;
-}
 
 .buttons {
     display: flex;
@@ -50,7 +44,8 @@
     flex-direction: row;
     align-content:center;
     justify-content: center;
-    gap: 50px;
+    gap: 30px;
+    padding: 30px;
 }
 
 * {
@@ -78,6 +73,24 @@ input {
     padding:10px;
 }
 
+.dashboard-heading {
+    display:flex;
+    justify-content: space-between;
+}
+
+.X {
+    font-family: 'Creato Display';
+    font-size: 40px;
+    color:#2684FC;
+    background:white;
+    text-align:center;
+    border:none;
+}
+
+.X:hover {
+    color: rgba(38, 131, 252, 0.5);;
+}
+
 button, .button {
     border: 1px solid rgba(38, 132, 252, 0.75);
     font-size:15px;
@@ -102,6 +115,7 @@ h2 {
     font-style: bold;
     color: #2684FC;
     text-decoration: none;
+    text-align: center;
 }
 
 body {
