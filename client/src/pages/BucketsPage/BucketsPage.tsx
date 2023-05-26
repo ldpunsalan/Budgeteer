@@ -153,19 +153,21 @@ const BucketsPage = () => {
     }
 
     const handleDeleteBucket = () => {
-
-        if (!current) {
-            return alert('Something went wrong')
-        }
-
-        const newBuckets = buckets.filter((bucket) => bucket.id !== current.id)
-        remove(ref(db,`/${sessionInfo.user}/Buckets/${current.id}`))
-        setBuckets(newBuckets)
-
-        if (newBuckets.length === 0) {
-            setCurrent(null)
-        } else {
-            setCurrent(newBuckets[0])
+        const confirmed = window.confirm('Are you sure you want to delete the current bucket?')
+        if(confirmed) {
+            if (!current) {
+                return alert('Something went wrong')
+            }
+    
+            const newBuckets = buckets.filter((bucket) => bucket.id !== current.id)
+            remove(ref(db,`/${sessionInfo.user}/Buckets/${current.id}`))
+            setBuckets(newBuckets)
+    
+            if (newBuckets.length === 0) {
+                setCurrent(null)
+            } else {
+                setCurrent(newBuckets[0])
+            }
         }
     }
 
@@ -176,55 +178,67 @@ const BucketsPage = () => {
     }
 
     if (loading) {
-        return <p>loading...</p>
+        return <p style={{color:'white'}}>loading...</p>
     } else if (modal.status === MODAL_STATUS.add) {
         return (
-            <div className={styles['content']}>
-                <h2>Add Bucket</h2>
-                <form onSubmit={handleNewBucket}>
-                    <label>
-                        Name:
-                        <input type="text" name="name" required />
-                    </label>
-                    <label>
-                        Weight:
-                        <input type="number" name="weight" required />
-                    </label>
-                    <label>
-                        Value:
-                        <input type="number" name="value" required />
-                    </label>
-                    <input type="submit" value="Add Bucket" />
-                </form>
+            <div className={styles['container']}>
+                <div className={styles['content']}>
+                    <div className={styles['dashboard-heading']}>
+                        <h2>Add Bucket</h2>
+                        <button onClick={() => window.location.href = '/buckets'} className={styles['X']}>X</button>
+                    </div>
+                    <form onSubmit={handleNewBucket}>
+                        <label>
+                            Name:
+                            <input type="text" name="name" required />
+                        </label>
+                        <label>
+                            Weight:
+                            <input type="number" name="weight" required />
+                        </label>
+                        <label>
+                            Value:
+                            <input type="number" name="value" required />
+                        </label>
+                        <input type="submit" value="Add Bucket" className={styles['button']}/>
+                    </form>
+                </div>
             </div>
         )
     } else if (!current) {
         return (
-            <div className={styles['content']}>
-                <h2>Buckets</h2>
-                <h1>You have no buckets</h1>
-                <button onClick={() => addBucket()}>Add Bucket</button>
+            <div className={styles['container']}>
+                <div className={styles['content']}>
+                    <h2>Buckets</h2>
+                    <h1>You have no buckets</h1>
+                    <button onClick={() => addBucket()}>Add Bucket</button>
+                </div>
             </div>
         )
     } else if (modal.status === MODAL_STATUS.edit) {
         return (
-            <div className={styles['content']}>
-                <h2>Edit Bucket</h2>
-                <form onSubmit={handleEditBucket}>
-                    <label>
-                        Name:
-                        <input type="text" name="name" defaultValue={current.name} required />
-                    </label>
-                    <label>
-                        Weight:
-                        <input type="number" name="weight" defaultValue={current.weight} required />
-                    </label>
-                    <label>
-                        Value:
-                        <input type="number" name="value" defaultValue={current.value} required />
-                    </label>
-                    <input type="submit" value="Edit Bucket" />
-                </form>
+            <div className={styles['container']}>
+                <div className={styles['content']}>
+                    <div className={styles['dashboard-heading']}>
+                        <h2>Edit Bucket</h2>
+                        <button onClick={() => window.location.href = '/buckets'} className={styles['X']}>X</button>
+                    </div>
+                    <form onSubmit={handleEditBucket}>
+                        <label>
+                            Name:
+                            <input type="text" name="name" defaultValue={current.name} required />
+                        </label>
+                        <label>
+                            Weight:
+                            <input type="number" name="weight" defaultValue={current.weight} required />
+                        </label>
+                        <label>
+                            Value:
+                            <input type="number" name="value" defaultValue={current.value} required />
+                        </label>
+                        <input type="submit" value="Edit Bucket" className={styles['button']}/>
+                    </form>
+                </div>
             </div>
         )
     } 
@@ -233,7 +247,7 @@ const BucketsPage = () => {
         <div className={styles['container']}>
             <div className ={styles['content']}>
                 <h2>BUCKETS</h2>
-                <h1>&#8369;{current.value}</h1>
+                <h1>&#8369;{current.value.toFixed(2)}</h1>
                 <h3>Name= {current.name}<br />Weight= {current.weight}</h3>
                 <select name="bucketName" className="bucketPageInputs" onChange={handleChangeBucket} value={current.id}>
                 {

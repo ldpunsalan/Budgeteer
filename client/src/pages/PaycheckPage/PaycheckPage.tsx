@@ -150,7 +150,7 @@ const PaycheckPage = () => {
                     <form name='paycheckForm' onSubmit={handleSubmit}>
                         <label>
                         <h3>Total Amount</h3>
-                        <h1>&#8369;{current}</h1>
+                        <h1>&#8369;{current.toFixed(2)}</h1>
                         <input 
                             name="paycheckAmount"
                             className="paycheckPageInputs"
